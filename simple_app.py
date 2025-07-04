@@ -238,7 +238,7 @@ def api_chat_upload():
         return jsonify({"success": False, "error": "No file part in the request."}), 400
     
     file = request.files['file']
-    session_id = request.form.get('session_id')
+    session_id = request.headers.get('X-Session-ID')
 
     if file.filename == '':
         return jsonify({"success": False, "error": "No selected file."}), 400

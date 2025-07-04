@@ -177,12 +177,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function uploadFile(file) {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('session_id', sessionId);
 
         addMessage(`Uploading file: ${file.name}...`, false, true);
 
         fetch('/api/chat/upload', {
             method: 'POST',
+            headers: {
+                'X-Session-ID': sessionId
+            },
             body: formData
         })
         .then(response => response.json())
