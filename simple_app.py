@@ -12,6 +12,7 @@ from flask_cors import CORS
 from datetime import datetime, timezone
 import json
 import requests
+import uuid
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -66,7 +67,9 @@ def devices():
 @app.route('/chat')
 def chat():
     """Chat interface page"""
-    return render_template('chat.html')
+    session_id = str(uuid.uuid4())
+    logger.info(f"New chat session created with ID: {session_id}")
+    return render_template('chat.html', session_id=session_id)
 
 @app.route('/documents')
 def documents():
