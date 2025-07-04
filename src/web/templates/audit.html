@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Network Audit - Network Automation AI Agent{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-search me-2"></i>Network Audit</h1>
+                <button class="btn btn-primary" onclick="startAudit()">
+                    <i class="fas fa-play me-2"></i>Start Audit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Available Devices</h5>
+                </div>
+                <div class="card-body">
+                    {% if devices %}
+                    <div class="list-group">
+                        {% for device in devices %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ device.name }}</h6>
+                                <small>{{ device.host }}</small>
+                            </div>
+                            <p class="mb-1">{{ device.role }}</p>
+                            <small>{{ device.device_type }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No devices available for audit</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Audit Results</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_audits %}
+                    <div class="list-group">
+                        {% for audit in recent_audits %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ audit.device_name }}</h6>
+                                <small>{{ audit.executed_at.strftime('%Y-%m-%d %H:%M') if audit.executed_at else 'Unknown' }}</small>
+                            </div>
+                            <p class="mb-1">{{ audit.summary }}</p>
+                            <span class="badge bg-{% if audit.status == 'success' %}success{% elif audit.status == 'error' %}danger{% else %}warning{% endif %}">
+                                {{ audit.status }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No recent audit results</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function startAudit() {
+    alert('Network audit functionality coming soon!');
+}
+</script>
+{% endblock %} 

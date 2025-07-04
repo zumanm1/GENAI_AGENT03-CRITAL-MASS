@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Network Automation AI Agent{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-file-alt me-2"></i>Documents</h1>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                    <i class="fas fa-upload me-2"></i>Upload Document
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Document Library</h5>
+                </div>
+                <div class="card-body">
+                    {% if documents %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Status</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in documents %}
+                                <tr>
+                                    <td><strong>{{ doc.filename }}</strong></td>
+                                    <td>{{ doc.file_type|upper }}</td>
+                                    <td>{{ "%.1f"|format(doc.file_size/1024) }} KB</td>
+                                    <td>
+                                        <span class="badge bg-{% if doc.status == 'processed' %}success{% elif doc.status == 'error' %}danger{% else %}warning{% endif %}">
+                                            {{ doc.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M') if doc.uploaded_at else 'Unknown' }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="searchDocument('{{ doc.filename }}')">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <h5>No documents found</h5>
+                        <p class="text-muted">Upload your first document to get started.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Select File</label>
+                        <input type="file" class="form-control" name="file" accept=".txt,.pdf,.md" required>
+                        <div class="form-text">Supported formats: TXT, PDF, MD</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="uploadDocument()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function searchDocument(filename) {
+    const query = prompt('Enter search query for document "' + filename + '":');
+    if (query) {
+        fetch('/api/documents/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: query,
+                n_results: 5
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.results.length > 0) {
+                let results = 'Search Results:\n\n';
+                data.results.forEach((result, index) => {
+                    results += `${index + 1}. ${result.content.substring(0, 100)}...\n`;
+                });
+                alert(results);
+            } else {
+                alert('No results found for: ' + query);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error searching document');
+        });
+    }
+}
+
+function uploadDocument() {
+    const form = document.getElementById('uploadForm');
+    const formData = new FormData(form);
+    
+    fetch('/api/documents/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert('Document uploaded successfully!');
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error uploading document');
+    });
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}AI Chat - Network Automation AI Agent{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        height: 70vh;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #f8f9fa;
+    }
+    
+    .message {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        max-width: 80%;
+    }
+    
+    .user-message {
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+        text-align: right;
+    }
+    
+    .assistant-message {
+        background-color: #28a745;
+        color: white;
+        margin-right: auto;
+    }
+    
+    .message-input {
+        border-radius: 25px;
+        padding: 12px 20px;
+    }
+    
+    .send-btn {
+        border-radius: 25px;
+        padding: 12px 25px;
+    }
+    
+    .typing-indicator {
+        display: none;
+        padding: 10px;
+        font-style: italic;
+        color: #666;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-robot me-2"></i>
+                            AI Network Assistant
+                        </h4>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" id="model-selector">
+                                <i class="fas fa-brain me-1"></i><span id="current-model-name">llama3.2:1b</span>
+                            </button>
+                            <ul class="dropdown-menu" id="model-dropdown">
+                                <li class="dropdown-header">Available Models</li>
+                                <li><div class="text-center p-2"><i class="fas fa-spinner fa-spin"></i> Loading...</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Chat Messages Container -->
+                    <div id="chat-messages" class="chat-messages p-3" style="height: 400px; overflow-y: auto;">
+                        <div class="message assistant-message mb-3">
+                            <div class="message-content">
+                                <strong>AI Assistant:</strong> Hello! I'm your Network Automation AI Assistant. I can help you with network configuration, troubleshooting, and automation tasks. What would you like to know?
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="chat-input border-top p-3">
+                        <form id="chat-form" class="d-flex">
+                            <input type="text" id="message-input" class="form-control me-2" 
+                                   placeholder="Type your message here..." required>
+                            <button type="submit" class="btn btn-primary" id="send-button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const chatMessages = document.getElementById('chat-messages');
+    const sessionId = '{{ session_id }}';
+    let currentModel = 'llama3.2:1b';
+
+    // Load available models
+    loadAvailableModels();
+
+    function loadAvailableModels() {
+        fetch('/api/ollama/models')
+            .then(response => response.json())
+            .then(data => {
+                currentModel = data.current_model;
+                document.getElementById('current-model-name').textContent = currentModel;
+                
+                const dropdown = document.getElementById('model-dropdown');
+                dropdown.innerHTML = '<li class="dropdown-header">Available Models</li>';
+                
+                data.models.forEach(model => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <a class="dropdown-item ${model.name === currentModel ? 'active' : ''}" 
+                           href="#" onclick="selectModel('${model.name}')">
+                            <i class="fas fa-brain me-2"></i>${model.name}
+                            <small class="text-muted d-block">${model.size} - ${model.speed}</small>
+                        </a>
+                    `;
+                    dropdown.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading models:', error);
+            });
+    }
+
+    window.selectModel = function(modelName) {
+        if (modelName === currentModel) return;
+        
+        fetch('/api/ollama/model', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: modelName
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentModel = modelName;
+                document.getElementById('current-model-name').textContent = modelName;
+                addMessage(`Switched to model: ${modelName}`, false, true);
+                loadAvailableModels(); // Refresh dropdown
+            } else {
+                addMessage(`Error switching model: ${data.error}`, false, true);
+            }
+        })
+        .catch(error => {
+            console.error('Error switching model:', error);
+            addMessage('Error switching model. Please try again.', false, true);
+        });
+    };
+
+    function addMessage(content, isUser = false, isSystem = false) {
+        const messageDiv = document.createElement('div');
+        if (isSystem) {
+            messageDiv.className = 'alert alert-info mb-3';
+            messageDiv.innerHTML = `<i class="fas fa-info-circle me-2"></i>${content}`;
+        } else {
+            messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'} mb-3`;
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.innerHTML = isUser ? `<strong>You:</strong> ${content}` : `<strong>AI Assistant:</strong> ${content}`;
+            messageDiv.appendChild(messageContent);
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendMessage(content) {
+        // Disable form
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        // Add user message
+        addMessage(content, true);
+        
+        // Send to API
+        fetch('/api/chat/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: content,
+                session_id: sessionId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.response) {
+                addMessage(data.response);
+            } else if (data.error) {
+                addMessage(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage('Sorry, I encountered an error. Please try again.');
+        })
+        .finally(() => {
+            // Re-enable form
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+        });
+    }
+
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const content = messageInput.value.trim();
+        if (content) {
+            sendMessage(content);
+            messageInput.value = '';
+        }
+    });
+
+    // Focus on input
+    messageInput.focus();
+});
+</script>
+{% endblock %} 

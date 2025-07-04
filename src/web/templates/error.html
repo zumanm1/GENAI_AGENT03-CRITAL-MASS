@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Error - Network Automation AI Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="text-center">
+                <div class="error-icon mb-4">
+                    {% if error_code == 404 %}
+                        <i class="fas fa-search fa-5x text-warning"></i>
+                    {% elif error_code == 500 %}
+                        <i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
+                    {% else %}
+                        <i class="fas fa-times-circle fa-5x text-danger"></i>
+                    {% endif %}
+                </div>
+                
+                <h1 class="display-4 mb-3">
+                    {% if error_code %}
+                        {{ error_code }}
+                    {% else %}
+                        Error
+                    {% endif %}
+                </h1>
+                
+                <h4 class="mb-3">
+                    {% if error_code == 404 %}
+                        Page Not Found
+                    {% elif error_code == 500 %}
+                        Internal Server Error
+                    {% else %}
+                        Something Went Wrong
+                    {% endif %}
+                </h4>
+                
+                <p class="text-muted mb-4">
+                    {{ error }}
+                </p>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <button class="btn btn-outline-secondary" onclick="history.back()">
+                        <i class="fas fa-arrow-left me-2"></i>Go Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

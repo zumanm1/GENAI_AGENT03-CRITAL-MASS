@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Network Automation AI Agent{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+                Network Dashboard
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="startNetworkDiscovery()">
+                        <i class="fas fa-search me-1"></i>Discover
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Devices
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ stats.devices if stats else 0 }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-server fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Documents
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ stats.documents if stats else 0 }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Audit Results
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ stats.audit_results if stats else 0 }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-search fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Chat Messages
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ stats.chat_messages if stats else 0 }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Device Status -->
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-server me-2"></i>Network Devices
+                </h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow">
+                        <a class="dropdown-item" href="{{ url_for('devices') }}">View All Devices</a>
+                        <a class="dropdown-item" href="#" onclick="runQuickAudit()">Quick Audit</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="refreshDevices()">Refresh</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if devices %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>IP Address</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Last Seen</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for device in devices %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="device-icon me-2">
+                                                <i class="fas fa-server text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">{{ device.name }}</div>
+                                                <small class="text-muted">{{ device.vendor or 'Unknown' }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ device.host }}</td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ device.role or 'Unknown' }}</span>
+                                    </td>
+                                    <td>
+                                        {% if device.status == 'up' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-circle me-1"></i>Online
+                                            </span>
+                                        {% elif device.status == 'down' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-circle me-1"></i>Offline
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-circle me-1"></i>Unknown
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if device.last_seen %}
+                                            <small class="text-muted">{{ device.last_seen }}</small>
+                                        {% else %}
+                                            <small class="text-muted">Never</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary btn-sm" 
+                                                    onclick="pingDevice('{{ device.name }}')"
+                                                    title="Ping Device">
+                                                <i class="fas fa-satellite-dish"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm" 
+                                                    onclick="auditDevice('{{ device.name }}')"
+                                                    title="Audit Device">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-server fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No devices found</h5>
+                        <p class="text-muted">Start by discovering devices on your network</p>
+                        <button class="btn btn-primary" onclick="startNetworkDiscovery()">
+                            <i class="fas fa-search me-2"></i>Discover Devices
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-clock me-2"></i>Recent Activity
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if recent_audits %}
+                    <div class="timeline">
+                        {% for audit in recent_audits %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                {% if audit.status == 'pass' %}
+                                    <i class="fas fa-check-circle text-success"></i>
+                                {% elif audit.status == 'fail' %}
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                {% else %}
+                                    <i class="fas fa-exclamation-circle text-warning"></i>
+                                {% endif %}
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">{{ audit.audit_type|title }} Audit</h6>
+                                <p class="timeline-text">
+                                    <strong>{{ audit.device_name }}</strong>: {{ audit.summary or 'No summary available' }}
+                                </p>
+                                <small class="text-muted">{{ audit.executed_at }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-clock fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">No recent activity</p>
+                        <a href="{{ url_for('audit') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-search me-1"></i>Run Audit
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-primary text-white h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-comments fa-2x mb-2"></i>
+                                <h6>Chat with AI</h6>
+                                <p class="small">Ask questions about your network</p>
+                                <a href="{{ url_for('chat') }}" class="btn btn-light btn-sm">
+                                    Start Chat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-success text-white h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-search fa-2x mb-2"></i>
+                                <h6>Network Audit</h6>
+                                <p class="small">Run comprehensive network checks</p>
+                                <a href="{{ url_for('audit') }}" class="btn btn-light btn-sm">
+                                    Run Audit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-info text-white h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-upload fa-2x mb-2"></i>
+                                <h6>Upload Documents</h6>
+                                <p class="small">Add network configurations</p>
+                                <a href="{{ url_for('documents') }}" class="btn btn-light btn-sm">
+                                    Upload
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-warning text-white h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-plus fa-2x mb-2"></i>
+                                <h6>Add Device</h6>
+                                <p class="small">Register new network device</p>
+                                <a href="{{ url_for('devices') }}" class="btn btn-light btn-sm">
+                                    Add Device
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function refreshDashboard() {
+    location.reload();
+}
+
+function startNetworkDiscovery() {
+    // Show loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Discovering...';
+    button.disabled = true;
+    
+    fetch('/api/network/discover', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Discovery result:', data);
+        alert('Network discovery started. This feature is not yet fully implemented.');
+        
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error starting network discovery');
+        
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
+
+function pingDevice(deviceName) {
+    alert(`Ping functionality for ${deviceName} is not yet implemented.`);
+}
+
+function auditDevice(deviceName) {
+    alert(`Audit functionality for ${deviceName} is not yet implemented.`);
+}
+
+function runQuickAudit() {
+    alert('Quick audit functionality is not yet implemented.');
+}
+
+function refreshDevices() {
+    location.reload();
+}
+</script>
+{% endblock %} 
