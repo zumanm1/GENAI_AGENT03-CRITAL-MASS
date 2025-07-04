@@ -66,6 +66,16 @@ function initializeEventListeners() {
     forms.forEach(form => {
         form.addEventListener('submit', handleAjaxForm);
     });
+
+    const chatForm = document.getElementById('chat-form');
+    if (chatForm) {
+        chatForm.addEventListener('submit', handleChatSubmit);
+    }
+
+    // Check Ollama status on page load
+    if (document.getElementById('ollama-status')) {
+        checkOllamaStatus();
+    }
 }
 
 /**
@@ -376,6 +386,109 @@ function isValidIP(ip) {
 function isValidHostname(hostname) {
     const regex = /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/;
     return regex.test(hostname);
+}
+
+/**
+ * Handle chat message submission
+ */
+function handleChatSubmit(event) {
+    event.preventDefault();
+    const messageInput = document.getElementById('message-input');
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    appendMessage(message, 'user');
+    messageInput.value = '';
+    showTypingIndicator();
+
+    fetch('/api/chat/message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideTypingIndicator();
+        if (data.response) {
+            appendMessage(data.response, 'assistant');
+        } else {
+            appendMessage('An error occurred. Please try again.', 'assistant');
+        }
+    })
+    .catch(error => {
+        hideTypingIndicator();
+        console.error('Error sending chat message:', error);
+        appendMessage('Failed to connect to the server. Please check your connection.', 'assistant');
+    });
+}
+
+/**
+ * Appends a message to the chat history
+ */
+function appendMessage(message, sender) {
+    const chatHistory = document.getElementById('chat-history');
+    const messageElement = document.createElement('div');
+    messageElement.className = `chat-message ${sender}`;
+    messageElement.innerHTML = `<p>${message}</p>`;
+    chatHistory.appendChild(messageElement);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+/**
+ * Shows the typing indicator
+ */
+function showTypingIndicator() {
+    const typingIndicator = document.getElementById('typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.style.display = 'flex';
+    }
+}
+
+/**
+ * Hides the typing indicator
+ */
+function hideTypingIndicator() {
+    const typingIndicator = document.getElementById('typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.style.display = 'none';
+    }
+}
+
+/**
+ * Check Ollama status
+ */
+function checkOllamaStatus() {
+    const statusElement = document.getElementById('ollama-status');
+    const modelElement = document.getElementById('active-model');
+
+    if (!statusElement || !modelElement) return;
+
+    statusElement.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Checking...';
+    modelElement.innerHTML = '<span class="text-muted">Loading...</span>';
+
+    fetch('/api/ollama/status')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'online') {
+                statusElement.innerHTML = '<i class="fas fa-check-circle text-success me-2"></i>Online';
+                modelElement.innerHTML = `<span class="badge bg-success">${data.model_name}</span>`;
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-times-circle text-danger me-2"></i>Offline';
+                modelElement.innerHTML = '<span class="badge bg-danger">Not Available</span>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching Ollama status:', error);
+            statusElement.innerHTML = '<i class="fas fa-exclamation-triangle text-danger me-2"></i>Error';
+            modelElement.innerHTML = '<span class="badge bg-danger">Unknown</span>';
+        });
 }
 
 /**

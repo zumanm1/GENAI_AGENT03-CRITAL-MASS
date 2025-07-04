@@ -203,7 +203,8 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({
                 content: content,
-                session_id: sessionId
+                session_id: sessionId,
+                model: currentModel
             })
         })
         .then(response => response.json())

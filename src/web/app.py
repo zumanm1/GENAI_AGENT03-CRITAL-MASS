@@ -14,11 +14,11 @@ import uuid
 # Add src directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from core.config import config
-from core.database import db_manager
-from core.ollama_service import ollama_service
-from core.chromadb_service import chromadb_service
-from rag.document_processor import document_processor
+from src.core.config import config
+from src.core.database import db_manager
+from src.core.ollama_service import ollama_service
+from src.core.chromadb_service import chromadb_service
+from src.rag.document_processor import document_processor
 
 # Initialize Flask app
 app = Flask(__name__)

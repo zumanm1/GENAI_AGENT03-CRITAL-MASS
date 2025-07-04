@@ -24,11 +24,21 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Current Model</label>
-                        <div id="current-model" class="alert alert-info">
-                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        <label for="ollama-status" class="form-label">Ollama Service Status</label>
+                        <div id="ollama-status" class="d-flex align-items-center">
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>Checking...</span>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label for="active-model" class="form-label">Active Model</label>
+                        <div id="active-model">
+                            <span class="text-muted">Loading...</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="checkOllamaStatus()">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh Status
+                    </button>
                     
                     <div class="mb-3">
                         <label class="form-label">Available Models</label>
@@ -155,7 +165,7 @@ function loadModelSettings() {
             availableModels = data.models;
             
             // Update current model display
-            document.getElementById('current-model').innerHTML = `
+            document.getElementById('active-model').innerHTML = `
                 <i class="fas fa-robot me-2"></i>
                 <strong>${currentModel}</strong>
                 ${data.recommended === currentModel ? '<span class="badge bg-success ms-2">Recommended</span>' : ''}
@@ -188,7 +198,7 @@ function loadModelSettings() {
         })
         .catch(error => {
             console.error('Error loading models:', error);
-            document.getElementById('current-model').innerHTML = `
+            document.getElementById('active-model').innerHTML = `
                 <i class="fas fa-exclamation-triangle me-2"></i>
                 Error loading model information
             `;
@@ -232,6 +242,25 @@ function saveSettings() {
           `Auto-select fastest: ${autoSelect}\n` +
           `Chat timeout: ${chatTimeout}s\n` +
           `Max history: ${maxHistory} messages`);
+}
+
+function checkOllamaStatus() {
+    fetch('/api/ollama/status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ready') {
+                document.getElementById('ollama-status').className = 'd-flex align-items-center text-success';
+                document.getElementById('ollama-status').innerHTML = 'Ollama service is ready!';
+            } else {
+                document.getElementById('ollama-status').className = 'd-flex align-items-center text-danger';
+                document.getElementById('ollama-status').innerHTML = 'Ollama service is not ready.';
+            }
+        })
+        .catch(error => {
+            console.error('Error checking Ollama status:', error);
+            document.getElementById('ollama-status').className = 'd-flex align-items-center text-danger';
+            document.getElementById('ollama-status').innerHTML = 'Error checking Ollama status.';
+        });
 }
 </script>
 {% endblock %}

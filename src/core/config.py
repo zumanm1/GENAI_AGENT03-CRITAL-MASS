@@ -9,15 +9,7 @@ import logging
 from pathlib import Path
 from typing import Dict, Any
 
-# Add config directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "config"))
-
-try:
-    from app_config import *
-except ImportError as e:
-    print(f"Error importing configuration: {e}")
-    sys.exit(1)
-
+from config.app_config import *
 
 class AppConfig:
     """Centralized application configuration manager"""
