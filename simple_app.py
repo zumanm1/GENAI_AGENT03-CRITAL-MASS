@@ -24,6 +24,10 @@ app.config['SECRET_KEY'] = 'dev-secret-key-change-in-production'
 # Enable CORS
 CORS(app)
 
+# In-memory storage for uploaded file contexts
+# In a real-world app, you'd use a more persistent store like a database or filesystem
+uploaded_file_contexts = {}
+
 # Mock data for demonstration
 MOCK_DEVICES = [
     {"id": 1, "name": "R15", "ip": "172.16.39.115", "type": "PE Router", "status": "online"},
@@ -118,9 +122,11 @@ def api_chat_message():
         data = request.get_json(silent=True)
         message = ""
         model = None
+        file_context_id = None
         if data:
             message = data.get('content', '').lower()
             model = data.get('model')
+            file_context_id = data.get('file_context_id')
 
         if not message:
             return jsonify({'response': "It seems I didn't get a message. Please try asking your question again."})
@@ -141,13 +147,20 @@ def api_chat_message():
                 logger.error(error_msg)
                 return jsonify({'response': f"AI service error: {error_msg}"})
 
+        # Prepend file context if it exists
+        final_prompt = message
+        if file_context_id and file_context_id in uploaded_file_contexts:
+            context = uploaded_file_contexts[file_context_id]
+            final_prompt = f"Using the following context, please answer the question.\n\n--- Context ---\n{context}\n--- End Context ---\n\nQuestion: {message}"
+            logger.info("Used uploaded file context for RAG.")
+
         # Send the message to the Ollama service
         try:
             ollama_response = requests.post(
                 'http://localhost:11434/api/generate',
                 json={
                     "model": model,
-                    "prompt": message,
+                    "prompt": final_prompt,
                     "stream": False
                 }
             )
@@ -217,6 +230,39 @@ def api_get_ollama_models():
     except Exception as e:
         logger.error(f"Error fetching Ollama models: {e}")
         return jsonify({"error": "An unexpected error occurred."}), 500
+
+@app.route('/api/chat/upload', methods=['POST'])
+def api_chat_upload():
+    """Handles text file uploads for RAG context."""
+    if 'file' not in request.files:
+        return jsonify({"success": False, "error": "No file part in the request."}), 400
+    
+    file = request.files['file']
+    session_id = request.form.get('session_id')
+
+    if file.filename == '':
+        return jsonify({"success": False, "error": "No selected file."}), 400
+
+    if not session_id:
+        return jsonify({"success": False, "error": "No session ID provided."}), 400
+
+    if file and file.filename.endswith('.txt'):
+        try:
+            content = file.read().decode('utf-8')
+            
+            # Store the content. Using session_id as the key.
+            # In a multi-user system, you'd want a more robust key.
+            file_id = session_id 
+            uploaded_file_contexts[file_id] = content
+            
+            logger.info(f"Uploaded file for session {session_id}, size: {len(content)} bytes.")
+            
+            return jsonify({"success": True, "file_id": file_id})
+        except Exception as e:
+            logger.error(f"Error reading or storing uploaded file: {e}")
+            return jsonify({"success": False, "error": "Could not process file."}), 500
+    
+    return jsonify({"success": False, "error": "Invalid file type. Only .txt files are allowed."}), 400
 
 @app.route('/api/ollama/model', methods=['POST'])
 def api_select_ollama_model():

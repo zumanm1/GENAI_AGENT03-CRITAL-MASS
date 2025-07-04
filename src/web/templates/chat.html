@@ -87,12 +87,21 @@
                     <!-- Chat Input -->
                     <div class="chat-input border-top p-3">
                         <form id="chat-form" class="d-flex">
+                            <input type="file" id="file-input" style="display: none;" accept=".txt">
+                            <button type="button" class="btn btn-secondary me-2" id="attach-file-button" title="Attach a text file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
                             <input type="text" id="message-input" class="form-control me-2" 
                                    placeholder="Type your message here..." required>
                             <button type="submit" class="btn btn-primary" id="send-button">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </form>
+                        <div id="attachment-info" class="mt-2 text-muted" style="display: none;">
+                            <i class="fas fa-file-alt me-1"></i>
+                            <span id="attachment-name"></span>
+                            <button type="button" class="btn-close ms-2" aria-label="Remove attachment" id="remove-attachment-button"></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,6 +117,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const sessionId = '{{ session_id }}';
     let currentModel = 'llama3.2:1b';
+    let attachedFileContext = null;
+
+    // File attachment elements
+    const attachFileButton = document.getElementById('attach-file-button');
+    const fileInput = document.getElementById('file-input');
+    const attachmentInfo = document.getElementById('attachment-info');
+    const attachmentName = document.getElementById('attachment-name');
+    const removeAttachmentButton = document.getElementById('remove-attachment-button');
 
     // Load available models
     loadAvailableModels();
@@ -137,6 +154,52 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('Error loading models:', error);
             });
+    }
+
+    attachFileButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            uploadFile(file);
+        }
+    });
+
+    removeAttachmentButton.addEventListener('click', () => {
+        fileInput.value = ''; // Clear the file input
+        attachedFileContext = null;
+        attachmentInfo.style.display = 'none';
+        addMessage(`File context has been cleared.`, false, true);
+    });
+
+    function uploadFile(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('session_id', sessionId);
+
+        addMessage(`Uploading file: ${file.name}...`, false, true);
+
+        fetch('/api/chat/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                attachedFileContext = data.file_id; // Store a reference to the context
+                attachmentName.textContent = file.name;
+                attachmentInfo.style.display = 'block';
+                addMessage(`Successfully uploaded and processed "${file.name}". You can now ask questions about its content.`, false, true);
+            } else {
+                addMessage(`Error uploading file: ${data.error}`, false, true);
+            }
+        })
+        .catch(error => {
+            console.error('Error uploading file:', error);
+            addMessage('An unexpected error occurred during file upload.', false, true);
+        });
     }
 
     window.selectModel = function(modelName) {
@@ -204,7 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify({
                 content: content,
                 session_id: sessionId,
-                model: currentModel
+                model: currentModel,
+                file_context_id: attachedFileContext
             })
         })
         .then(response => response.json())
