@@ -323,6 +323,50 @@ body {
     .timeline-item {
         padding-left: 1rem;
     }
+    
+    /* Ensure main content is visible on mobile */
+    .main-content {
+        min-height: calc(100vh - 200px);
+        padding: 1rem !important;
+    }
+    
+    /* Fix container responsiveness */
+    .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    /* Ensure cards stack properly on mobile */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    /* Responsive table */
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    /* Responsive buttons */
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 0.5rem !important;
+    }
+    
+    .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    /* Stack form elements on very small screens */
+    .row > [class*="col-"] {
+        margin-bottom: 0.5rem;
+    }
 }
 
 /* Custom Scrollbar */

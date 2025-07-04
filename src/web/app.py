@@ -90,6 +90,13 @@ def documents():
         return render_template('error.html', error=str(e)), 500
 
 
+@app.route('/dashboard')
+def dashboard():
+    """Dashboard page (same as index)"""
+    print("Dashboard route called!")
+    return index()
+
+
 @app.route('/audit')
 def audit():
     """Network audit page"""
@@ -99,6 +106,22 @@ def audit():
         return render_template('audit.html', devices=devices, recent_audits=recent_audits)
     except Exception as e:
         logger.error(f"Error loading audit page: {e}")
+        return render_template('error.html', error=str(e)), 500
+
+
+@app.route('/settings')
+def settings():
+    """Settings page"""
+    try:
+        # Get available models
+        models = ollama_service.list_models()
+        current_model = config.ollama['MODEL_NAME']
+        
+        return render_template('settings.html', 
+                             models=models, 
+                             current_model=current_model)
+    except Exception as e:
+        logger.error(f"Error loading settings: {e}")
         return render_template('error.html', error=str(e)), 500
 
 
@@ -647,18 +670,13 @@ def initialize_default_devices():
 
 
 if __name__ == '__main__':
-    # Initialize default devices
+    logger.info("Starting Network Automation AI Agent...")
+    
+    # Initialize default devices if needed
     initialize_default_devices()
     
-    # Run the application
-    logger.info("Starting Network Automation AI Agent...")
-    logger.info(f"Debug mode: {config.flask['DEBUG']}")
-    logger.info(f"Host: {config.flask['HOST']}")
-    logger.info(f"Port: {config.flask['PORT']}")
-    
     app.run(
-        host=config.flask['HOST'],
-        port=config.flask['PORT'],
-        debug=config.flask['DEBUG'],
-        threaded=config.flask['THREADED']
+        host=config.flask.get('HOST', '0.0.0.0'),
+        port=config.flask.get('PORT', 5003),
+        debug=True
     ) 

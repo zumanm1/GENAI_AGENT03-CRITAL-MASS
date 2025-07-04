@@ -124,6 +124,11 @@ def audit():
         logger.error(f"Error loading audit page: {e}")
         return f"Audit Error: {e}", 500
 
+@app.route('/dashboard')
+def dashboard():
+    """Dashboard page (alias for index)"""
+    return index()
+
 @app.route('/settings')
 def settings():
     """Settings page"""
@@ -180,6 +185,28 @@ def api_get_devices():
         logger.error(f"Error getting devices: {e}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/chat', methods=['POST'])
+def api_chat():
+    """Send chat message - basic version"""
+    try:
+        data = request.get_json()
+        if not data or 'content' not in data:
+            return jsonify({'error': 'Message content required'}), 400
+        
+        session_id = data.get('session_id', session.get('session_id', str(uuid.uuid4())))
+        
+        # Simple response for now
+        response_content = f"Echo: {data['content']} (AI integration coming soon)"
+        
+        return jsonify({
+            'session_id': session_id,
+            'response': response_content,
+            'message_id': str(uuid.uuid4())
+        })
+    except Exception as e:
+        logger.error(f"Error processing chat message: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/chat/message', methods=['POST'])
 def api_chat_message():
     """Send chat message - basic version"""
@@ -198,7 +225,6 @@ def api_chat_message():
             'response': response_content,
             'message_id': str(uuid.uuid4())
         })
-        
     except Exception as e:
         logger.error(f"Error processing chat message: {e}")
         return jsonify({'error': str(e)}), 500

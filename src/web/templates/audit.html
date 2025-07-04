@@ -15,6 +15,80 @@
         </div>
     </div>
 
+    <!-- Audit Configuration Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Audit Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <form id="auditForm" class="audit-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="deviceSelect" class="form-label">Select Device</label>
+                                    <select class="form-select device-select" id="deviceSelect" name="device_id">
+                                        <option value="">Choose a device...</option>
+                                        {% for device in devices %}
+                                        <option value="{{ device.id }}">{{ device.name }} ({{ device.host }})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="auditType" class="form-label">Audit Type</label>
+                                    <select class="form-select" id="auditType" name="audit_type">
+                                        <option value="basic">Basic Configuration Check</option>
+                                        <option value="security">Security Audit</option>
+                                        <option value="performance">Performance Analysis</option>
+                                        <option value="compliance">Compliance Check</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="auditOptions" class="form-label">Audit Options</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="checkInterfaces" name="check_interfaces" checked>
+                                        <label class="form-check-label" for="checkInterfaces">
+                                            Check Interface Status
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="checkRouting" name="check_routing" checked>
+                                        <label class="form-check-label" for="checkRouting">
+                                            Verify Routing Tables
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="checkSecurity" name="check_security">
+                                        <label class="form-check-label" for="checkSecurity">
+                                            Security Configuration
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-play me-2"></i>Start Audit
+                                </button>
+                                <button type="button" class="btn btn-secondary ms-2" onclick="resetForm()">
+                                    <i class="fas fa-undo me-2"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -74,7 +148,25 @@
 
 <script>
 function startAudit() {
+    const form = document.getElementById('auditForm');
+    const deviceSelect = document.getElementById('deviceSelect');
+    
+    if (!deviceSelect.value) {
+        alert('Please select a device to audit');
+        return;
+    }
+    
     alert('Network audit functionality coming soon!');
 }
+
+function resetForm() {
+    document.getElementById('auditForm').reset();
+}
+
+// Handle form submission
+document.getElementById('auditForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    startAudit();
+});
 </script>
 {% endblock %} 

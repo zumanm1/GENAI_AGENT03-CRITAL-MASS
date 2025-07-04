@@ -44,4 +44,4 @@ echo "Press Ctrl+C to stop the server"
 echo "================================"
 
 cd /home/bootssd-2t/Documents/GEN_AI-AUTOMATION
-python src/web/app_working.py 
+python src/web/app.py 
