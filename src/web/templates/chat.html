@@ -53,133 +53,198 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">
-                            <i class="fas fa-robot me-2"></i>
-                            AI Network Assistant
-                        </h4>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" id="model-selector">
-                                <i class="fas fa-brain me-1"></i><span id="current-model-name">llama3.2:1b</span>
-                            </button>
-                            <ul class="dropdown-menu" id="model-dropdown">
-                                <li class="dropdown-header">Available Models</li>
-                                <li><div class="text-center p-2"><i class="fas fa-spinner fa-spin"></i> Loading...</div></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <!-- Chat Messages Container -->
-                    <div id="chat-messages" class="chat-messages p-3" style="height: 400px; overflow-y: auto;">
-                        <div class="message assistant-message mb-3">
-                            <div class="message-content">
-                                <strong>AI Assistant:</strong> Hello! I'm your Network Automation AI Assistant. I can help you with network configuration, troubleshooting, and automation tasks. What would you like to know?
-                            </div>
-                        </div>
-                    </div>
+<div class="container-fluid chat-container">
+    <div class="row h-100">
+        <!-- Sidebar for AI Model Selection -->
+        <div class="col-md-3 sidebar">
+            <h5 class="mt-3 mb-3">AI Model</h5>
+            <div id="model-list" class="list-group">
+                <!-- AI models will be dynamically loaded here -->
+            </div>
+            <hr>
+            <div class="sidebar-footer">
+                <small>Current Model:</small>
+                <strong id="current-model-display">N/A</strong>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="col-md-9 chat-area">
+            <div class="chat-header">
+                <h4 class="mb-0">AI Network Assistant</h4>
+            </div>
+            <div id="chat-messages" class="chat-messages p-3">
+                <!-- Chat messages will be appended here -->
+            </div>
+            <div id="attached-file-display" class="p-2 border-top" style="display: none;">
+                <!-- Attached file info will be shown here -->
+            </div>
+            <div class="chat-input-section">
+                <form id="chat-form" class="d-flex p-3 border-top">
+                    <!-- Hidden file input for RAG -->
+                    <input type="file" id="file-input" style="display: none;" accept=".txt,.pdf,.csv,.xlsx">
                     
-                    <!-- Chat Input -->
-                    <div class="chat-input border-top p-3">
-                        <form id="chat-form" class="d-flex">
-                            <input type="file" id="file-input" style="display: none;" accept=".txt,.pdf,.csv,.xlsx">
-                            <button type="button" class="btn btn-secondary me-2" id="attach-file-button" title="Attach a file">
-                                <i class="fas fa-paperclip"></i>
-                            </button>
-                            <input type="text" id="message-input" class="form-control me-2" 
-                                   placeholder="Type your message here..." required>
-                            <button type="submit" class="btn btn-primary" id="send-button">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                        <div id="attachment-info" class="mt-2 text-muted" style="display: none;">
-                            <i class="fas fa-file-alt me-1"></i>
-                            <span id="attachment-name"></span>
-                            <button type="button" class="btn-close ms-2" aria-label="Remove attachment" id="remove-attachment-button"></button>
-                        </div>
-                    </div>
-                </div>
+                    <!-- File attachment button -->
+                    <button type="button" class="btn btn-secondary me-2" id="attach-file-button" title="Attach a file for context">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    
+                    <!-- Message input field -->
+                    <input type="text" id="message-input" class="form-control me-2" placeholder="Ask about network configs, devices, or use an uploaded file...">
+                    
+                    <!-- Send button -->
+                    <button type="submit" id="send-button" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+// =============================================================================
+// DOM Element References and State Initialization
+// =============================================================================
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Element References ---
+    const chatMessages = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
-    const chatMessages = document.getElementById('chat-messages');
-    const sessionId = '{{ session_id }}';
-    let currentModel = 'llama3.2:1b';
-    let attachedFileContext = null;
-
-    // File attachment elements
+    const modelList = document.getElementById('model-list');
+    const currentModelDisplay = document.getElementById('current-model-display');
     const attachFileButton = document.getElementById('attach-file-button');
     const fileInput = document.getElementById('file-input');
-    const attachmentInfo = document.getElementById('attachment-info');
-    const attachmentName = document.getElementById('attachment-name');
-    const removeAttachmentButton = document.getElementById('remove-attachment-button');
+    const attachedFileDisplay = document.getElementById('attached-file-display');
 
-    // Load available models
-    loadAvailableModels();
+    // --- State Variables ---
+    // The unique session ID is rendered by the Flask template.
+    // This is crucial for keeping this user's RAG context separate from others.
+    const sessionId = '{{ session_id }}'; 
+    let currentModel = ''; // The name of the currently selected Ollama model.
+    let attachedFileId = null; // The ID of the file uploaded for RAG context.
 
-    function loadAvailableModels() {
+    // =============================================================================
+    // Core Functions
+    // =============================================================================
+
+    /**
+     * Appends a message to the chat window.
+     * @param {string} text - The message content.
+     * @param {boolean} isUser - True if the message is from the user, false if from the AI.
+     * @param {boolean} isSystem - True for system messages (e.g., file upload status).
+     */
+    function addMessage(text, isUser, isSystem = false) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', isUser ? 'user-message' : 'ai-message');
+        if (isSystem) {
+            messageElement.classList.add('system-message');
+        }
+        
+        // Sanitize text to prevent basic HTML injection.
+        const sanitizedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        messageElement.innerHTML = `<div class="message-content">${sanitizedText}</div>`;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message.
+    }
+
+    /**
+     * Sends the user's message to the backend API.
+     * Handles prepending RAG context if a file has been uploaded.
+     * @param {string} content - The text message from the user.
+     */
+    function sendMessage(content) {
+        // Disable form to prevent multiple submissions.
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        // Display the user's message immediately in the UI.
+        addMessage(content, true);
+        
+        // Construct the payload for the API request.
+        const payload = {
+            content: content,
+            session_id: sessionId,
+            model: currentModel
+        };
+        
+        // If a file has been uploaded for this session, include its ID.
+        if (attachedFileId) {
+            payload.file_context_id = attachedFileId;
+        }
+
+        // Send the message to the backend chat endpoint.
+        fetch('/api/chat/message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the AI's response.
+            addMessage(data.response, false);
+        })
+        .catch(error => {
+            console.error('Error sending message:', error);
+            addMessage('Error: Could not connect to the server.', false, true);
+        })
+        .finally(() => {
+            // Re-enable the form.
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+        });
+    }
+
+    /**
+     * Fetches the list of available Ollama models from the backend and populates the sidebar.
+     */
+    function loadModels() {
         fetch('/api/ollama/models')
             .then(response => response.json())
             .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                modelList.innerHTML = ''; // Clear existing list.
                 currentModel = data.current_model;
-                document.getElementById('current-model-name').textContent = currentModel;
-                
-                const dropdown = document.getElementById('model-dropdown');
-                dropdown.innerHTML = '<li class="dropdown-header">Available Models</li>';
-                
+                currentModelDisplay.textContent = currentModel;
+
+                // Create a button for each available model.
                 data.models.forEach(model => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <a class="dropdown-item ${model.name === currentModel ? 'active' : ''}" 
-                           href="#" onclick="selectModel('${model.name}')">
-                            <i class="fas fa-brain me-2"></i>${model.name}
-                            <small class="text-muted d-block">${model.size} - ${model.speed}</small>
-                        </a>
-                    `;
-                    dropdown.appendChild(listItem);
+                    const modelButton = document.createElement('a');
+                    modelButton.href = '#';
+                    modelButton.classList.add('list-group-item', 'list-group-item-action');
+                    if (model.name === currentModel) {
+                        modelButton.classList.add('active');
+                    }
+                    modelButton.textContent = model.name;
+                    modelButton.dataset.modelName = model.name;
+                    modelList.appendChild(modelButton);
                 });
             })
             .catch(error => {
                 console.error('Error loading models:', error);
+                const errorElement = document.createElement('div');
+                errorElement.className = 'list-group-item text-danger';
+                errorElement.textContent = 'Could not load models. Is Ollama running?';
+                modelList.appendChild(errorElement);
             });
     }
 
-    attachFileButton.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
-        if (file) {
-            uploadFile(file);
-        }
-    });
-
-    removeAttachmentButton.addEventListener('click', () => {
-        fileInput.value = ''; // Clear the file input
-        attachedFileContext = null;
-        attachmentInfo.style.display = 'none';
-        addMessage(`File context has been cleared.`, false, true);
-    });
-
+    /**
+     * Handles the file upload process for RAG.
+     * @param {File} file - The file selected by the user.
+     */
     function uploadFile(file) {
         const formData = new FormData();
         formData.append('file', file);
 
         addMessage(`Uploading file: ${file.name}...`, false, true);
 
+        // Send the file to the dedicated upload endpoint.
+        // The session ID is sent as a header to link the file to this user's session.
         fetch('/api/chat/upload', {
             method: 'POST',
             headers: {
@@ -190,119 +255,84 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                attachedFileContext = data.file_id; // Store a reference to the context
-                attachmentName.textContent = file.name;
-                attachmentInfo.style.display = 'block';
-                addMessage(`Successfully uploaded and processed "${file.name}". You can now ask questions about its content.`, false, true);
+                attachedFileId = data.file_id;
+                addMessage(`File "${file.name}" is now ready for context.`, false, true);
+                // Display the name of the attached file in the UI.
+                attachedFileDisplay.innerHTML = `<small class="text-muted p-2">Context: <strong>${file.name}</strong></small>`;
+                attachedFileDisplay.style.display = 'block';
             } else {
-                addMessage(`Error uploading file: ${data.error}`, false, true);
+                throw new Error(data.error || 'Unknown error during file upload.');
             }
         })
         .catch(error => {
             console.error('Error uploading file:', error);
-            addMessage('An unexpected error occurred during file upload.', false, true);
+            addMessage(`Error uploading file: ${error.message}`, false, true);
+            attachedFileDisplay.style.display = 'none';
         });
     }
 
-    window.selectModel = function(modelName) {
-        if (modelName === currentModel) return;
-        
-        fetch('/api/ollama/model', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: modelName
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentModel = modelName;
-                document.getElementById('current-model-name').textContent = modelName;
-                addMessage(`Switched to model: ${modelName}`, false, true);
-                loadAvailableModels(); // Refresh dropdown
-            } else {
-                addMessage(`Error switching model: ${data.error}`, false, true);
-            }
-        })
-        .catch(error => {
-            console.error('Error switching model:', error);
-            addMessage('Error switching model. Please try again.', false, true);
-        });
-    };
+    // =============================================================================
+    // Event Listeners
+    // =============================================================================
 
-    function addMessage(content, isUser = false, isSystem = false) {
-        const messageDiv = document.createElement('div');
-        if (isSystem) {
-            messageDiv.className = 'alert alert-info mb-3';
-            messageDiv.innerHTML = `<i class="fas fa-info-circle me-2"></i>${content}`;
-        } else {
-            messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'} mb-3`;
-            const messageContent = document.createElement('div');
-            messageContent.className = 'message-content';
-            messageContent.innerHTML = isUser ? `<strong>You:</strong> ${content}` : `<strong>AI Assistant:</strong> ${content}`;
-            messageDiv.appendChild(messageContent);
-        }
-        
-        chatMessages.appendChild(messageDiv);
-        
-        // Scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function sendMessage(content) {
-        // Disable form
-        sendButton.disabled = true;
-        sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        
-        // Add user message
-        addMessage(content, true);
-        
-        // Send to API
-        fetch('/api/chat/message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                content: content,
-                session_id: sessionId,
-                model: currentModel,
-                file_context_id: attachedFileContext
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.response) {
-                addMessage(data.response);
-            } else if (data.error) {
-                addMessage(`Error: ${data.error}`);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage('Sorry, I encountered an error. Please try again.');
-        })
-        .finally(() => {
-            // Re-enable form
-            sendButton.disabled = false;
-            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-        });
-    }
-
-    chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const content = messageInput.value.trim();
-        if (content) {
-            sendMessage(content);
-            messageInput.value = '';
+    // --- Handle Chat Form Submission ---
+    chatForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const messageText = messageInput.value.trim();
+        if (messageText) {
+            sendMessage(messageText);
+            messageInput.value = ''; // Clear input field.
         }
     });
 
-    // Focus on input
-    messageInput.focus();
+    // --- Handle Model Selection ---
+    modelList.addEventListener('click', function(event) {
+        event.preventDefault();
+        const target = event.target;
+        if (target && target.classList.contains('list-group-item')) {
+            const modelName = target.dataset.modelName;
+            if (modelName && modelName !== currentModel) {
+                // Update state and UI
+                currentModel = modelName;
+                currentModelDisplay.textContent = modelName;
+                
+                // Remove active class from all buttons and add to the clicked one.
+                document.querySelectorAll('#model-list .list-group-item').forEach(btn => btn.classList.remove('active'));
+                target.classList.add('active');
+                
+                // Inform the user of the model switch.
+                addMessage(`Switched to model: ${modelName}`, false, true);
+
+                // (Optional) Inform the backend. This is currently a mock endpoint.
+                fetch('/api/ollama/model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: modelName })
+                });
+            }
+        }
+    });
+
+    // --- Handle File Attachment ---
+    attachFileButton.addEventListener('click', function() {
+        fileInput.click(); // Trigger the hidden file input dialog.
+    });
+
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            uploadFile(file);
+        }
+        // Reset the input so the user can upload the same file again if needed.
+        fileInput.value = '';
+    });
+
+    // =============================================================================
+    // Initial Page Load Actions
+    // =============================================================================
+    addMessage("Hello! I'm your Network Automation AI Assistant. I can help you with network configuration, troubleshooting, and automation tasks. What would you like to know?", false);
+    loadModels();
 });
 </script>
+{% endblock %} 
 {% endblock %} 

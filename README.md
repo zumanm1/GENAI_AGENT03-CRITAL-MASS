@@ -1,6 +1,106 @@
-# Network Automation AI Agent
+# GENAI_AGENT03-CRITAL-MASS: Network Automation AI Assistant
 
-An AI-powered network automation platform that enables natural language interaction with network devices, performs intelligent audits, and executes configuration tasks using Ollama LLM and RAG capabilities.
+This project is a Flask-based web application that serves as a powerful, AI-driven assistant for network automation tasks. It provides a user-friendly interface for chatting with an AI model, performing network discovery, running audits, and managing documents. The application is designed to be a "single pane of glass" for network engineers, integrating a Retrieval-Augmented Generation (RAG) pipeline to allow the AI to answer questions based on user-provided documents (including TXT, PDF, CSV, and XLSX files).
+
+## ✨ Features
+
+*   **AI-Powered Chat**: A real-time chat interface to interact with a large language model (LLM) powered by Ollama.
+*   **Dynamic Model Selection**: Easily switch between different Ollama models directly from the UI.
+*   **Retrieval-Augmented Generation (RAG)**: Upload documents (`.txt`, `.pdf`, `.csv`, `.xlsx`) to provide context to the AI for more accurate, context-aware responses.
+*   **Multi-Format File Parsing**: The backend can intelligently parse various document formats to extract text for the RAG pipeline.
+*   **Mocked Network Operations**: Includes placeholder endpoints for network discovery and auditing, providing a framework for future expansion.
+*   **Comprehensive UI**: A clean, intuitive web interface with pages for a dashboard, device management, document management, audits, and settings.
+*   **Detailed Logging**: Verbose backend logging provides real-time visibility into the RAG process and other application events.
+
+## 📂 Project Structure
+
+The project is organized into a clean and logical structure:
+
+```
+GENAI_AGENT03-CRITAL-MASS/
+├── simple_app.py               # The core Flask application logic.
+├── requirements.txt            # Python dependencies.
+├── venv/                       # Python virtual environment.
+└── src/
+    └── web/
+        ├── static/             # Static assets (CSS, JS, images).
+        │   ├── css/
+        │   │   └── style.css
+        │   └── js/
+        │       └── app.js
+        └── templates/          # Jinja2 HTML templates.
+            ├── base.html       # Base template with common layout.
+            ├── dashboard.html  # Main dashboard page.
+            ├── chat.html       # The AI chat interface.
+            ├── devices.html    # Device management page.
+            ├── documents.html  # Document management page.
+            ├── audit.html      # Network audit page.
+            ├── settings.html   # Application settings page.
+            └── error.html      # Error page template.
+```
+
+## ⚙️ Setup and Installation
+
+Follow these steps to set up and run the project locally.
+
+### Prerequisites
+
+*   Python 3.10+
+*   [Ollama](https://ollama.com/) installed and running locally.
+*   At least one Ollama model pulled (e.g., `ollama pull llama3`)
+
+### Installation Steps
+
+1.  **Clone the Repository**:
+    ```bash
+    git clone <repository-url>
+    cd GENAI_AGENT03-CRITAL-MASS
+    ```
+
+2.  **Create and Activate a Virtual Environment**:
+    It is highly recommended to use a virtual environment to manage dependencies.
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+    On Windows, use: `venv\Scripts\activate`
+
+3.  **Install Dependencies**:
+    Install all the required Python packages from the `requirements.txt` file.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## 🚀 How to Run the Application
+
+With the setup complete, you can start the Flask application.
+
+1.  **Ensure Ollama is Running**:
+    Open a separate terminal and make sure your local Ollama instance is active.
+
+2.  **Run the Flask Server**:
+    Execute the main application script. The server will start in debug mode.
+    ```bash
+    python3 simple_app.py
+    ```
+
+3.  **Access the Application**:
+    Open your web browser and navigate to [http://localhost:5003](http://localhost:5003). You should see the application's dashboard. The AI chat interface is available at [http://localhost:5003/chat](http://localhost:5003/chat).
+
+## 🛠️ API Endpoints
+
+The backend exposes several API endpoints to support the frontend functionality.
+
+*   `GET /api/health`: Health check endpoint.
+*   `GET /api/stats`: Retrieves mock statistics for the dashboard.
+*   `GET /api/devices`: Fetches a list of mock network devices.
+*   `POST /api/chat/message`: Handles sending a chat message to the Ollama LLM.
+*   `POST /api/chat/upload`: Manages file uploads for the RAG context.
+*   `GET /api/ollama/status`: Checks the status of the Ollama service.
+*   `GET /api/ollama/models`: Fetches the list of available Ollama models.
+*   `POST /api/ollama/model`: (Mock) Sets the active Ollama model.
+*   `POST /api/network/discover`: (Mock) Triggers a network discovery task.
+*   `POST /api/network/audit`: (Mock) Triggers a network audit task.
 
 ## 🚀 Project Overview
 

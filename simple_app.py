@@ -17,22 +17,28 @@ from PyPDF2 import PdfReader
 import pandas as pd
 import io
 
-# Setup logging
+# ==============================================================================
+# Logging and Application Setup
+# ==============================================================================
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Initialize Flask app
 app = Flask(__name__, template_folder="src/web/templates", static_folder="src/web/static")
 app.config['SECRET_KEY'] = 'dev-secret-key-change-in-production'
-
-# Enable CORS
 CORS(app)
 
-# In-memory storage for uploaded file contexts
-# In a real-world app, you'd use a more persistent store like a database or filesystem
+# ==============================================================================
+# In-Memory Data Stores
+# ==============================================================================
+# In-memory storage for uploaded file contexts for the RAG pipeline.
+# In a real-world application, this would be replaced with a more persistent
+# and scalable solution like a Redis cache, a database, or a dedicated
+# vector store. The session_id from the client is used as the key.
 uploaded_file_contexts = {}
 
-# Mock data for demonstration
+# Mock data for demonstration purposes. This provides sample data for the
+# UI without requiring a database connection, making the application
+# self-contained and easy to run.
 MOCK_DEVICES = [
     {"id": 1, "name": "R15", "ip": "172.16.39.115", "type": "PE Router", "status": "online"},
     {"id": 2, "name": "R16", "ip": "172.16.39.116", "type": "PE Router", "status": "online"},
@@ -50,33 +56,73 @@ MOCK_STATS = {
     "last_audit": "2024-01-15 10:30:00"
 }
 
+# ==============================================================================
+# Frontend Rendering Routes
+# ==============================================================================
+
 @app.route('/')
 def index():
-    """Main dashboard page"""
+    """
+    Renders the main dashboard page.
+
+    This is the primary landing page of the application, displaying key
+    statistics and a summary of network devices.
+
+    Returns:
+        Rendered HTML template for the dashboard.
+    """
     return render_template('dashboard.html', 
                          stats=MOCK_STATS,
                          devices=MOCK_DEVICES)
 
 @app.route('/dashboard')
 def dashboard():
-    """Dashboard page"""
+    """
+    Renders the dashboard page. Serves as an alternative route to index().
+
+    Returns:
+        Rendered HTML template for the dashboard.
+    """
     return index()
 
 @app.route('/devices')
 def devices():
-    """Device management page"""
+    """
+    Renders the device management page.
+
+    Displays a list of all mock network devices and their current status.
+
+    Returns:
+        Rendered HTML template for the device list.
+    """
     return render_template('devices.html', devices=MOCK_DEVICES)
 
 @app.route('/chat')
 def chat():
-    """Chat interface page"""
+    """
+    Renders the main chat interface page.
+
+    Generates a unique session ID for the user to ensure that their
+    file uploads for RAG are isolated from other users.
+
+    Returns:
+        Rendered HTML template for the chat page, with a unique session_id.
+    """
     session_id = str(uuid.uuid4())
     logger.info(f"New chat session created with ID: {session_id}")
     return render_template('chat.html', session_id=session_id)
 
 @app.route('/documents')
 def documents():
-    """Document management page"""
+    """
+    Renders the document management page.
+
+    Displays a list of mock documents that could be managed by the system.
+    Note: This is mock data and is not connected to the RAG uploads.
+
+    Returns:
+        Rendered HTML template for the documents page.
+    """
     mock_documents = [
         {"id": 1, "filename": "Network_Config_Guide.pdf", "file_type": "pdf", "size": 2500000, "status": "processed", "uploaded_at": datetime(2024, 1, 10, 10, 30)},
         {"id": 2, "filename": "OSPF_Troubleshooting.docx", "file_type": "docx", "size": 1800000, "status": "processed", "uploaded_at": datetime(2024, 1, 12, 11, 0)},
@@ -86,7 +132,14 @@ def documents():
 
 @app.route('/audit')
 def audit():
-    """Network audit page"""
+    """
+    Renders the network audit page.
+
+    Displays a list of mock devices and the results of recent mock audit tests.
+
+    Returns:
+        Rendered HTML template for the audit page.
+    """
     mock_audits = [
         {"id": 1, "device": "R15", "test": "OSPF Neighbors", "status": "PASS", "timestamp": "2024-01-15 10:30:00"},
         {"id": 2, "device": "R16", "test": "BGP Peers", "status": "PASS", "timestamp": "2024-01-15 10:31:00"},
@@ -98,13 +151,29 @@ def audit():
 
 @app.route('/settings')
 def settings():
-    """Settings page"""
+    """
+    Renders the application settings page.
+
+    Returns:
+        Rendered HTML template for the settings page.
+    """
     return render_template('settings.html')
 
+# ==============================================================================
 # API Routes
+# ==============================================================================
+
 @app.route('/api/health')
 def health_check():
-    """Health check endpoint"""
+    """
+    Provides a simple health check endpoint.
+
+    This can be used by monitoring services to verify that the application
+    is running and responsive.
+
+    Returns:
+        JSON object with the application's health status and version.
+    """
     return jsonify({
         'status': 'healthy',
         'timestamp': datetime.now(timezone.utc).isoformat(),
@@ -113,17 +182,42 @@ def health_check():
 
 @app.route('/api/stats')
 def get_stats():
-    """Get application statistics"""
+    """
+    API endpoint to get mock application statistics.
+
+    Returns:
+        JSON object containing the mock statistics data.
+    """
     return jsonify(MOCK_STATS)
 
 @app.route('/api/devices', methods=['GET'])
 def api_get_devices():
-    """Get all devices"""
+    """
+    API endpoint to get the list of all mock devices.
+
+    Returns:
+        JSON object containing a list of mock devices.
+    """
     return jsonify(MOCK_DEVICES)
 
 @app.route('/api/chat/message', methods=['POST'])
 def api_chat_message():
-    """Handle chat messages by sending them to the Ollama service"""
+    """
+    Handles incoming chat messages from the user.
+
+    This is the core endpoint for the AI chat functionality. It takes the user's
+    message, combines it with any context from an uploaded file (RAG), sends
+    it to the Ollama LLM, and returns the AI's response.
+
+    Body:
+        A JSON object containing:
+        - content (str): The user's message.
+        - model (str): The name of the Ollama model to use.
+        - file_context_id (str, optional): The ID of the uploaded file context.
+
+    Returns:
+        JSON object with the AI's response or an error message.
+    """
     try:
         data = request.get_json(silent=True)
         message = ""
@@ -153,14 +247,15 @@ def api_chat_message():
                 logger.error(error_msg)
                 return jsonify({'response': f"AI service error: {error_msg}"})
 
-        # Prepend file context if it exists
+        # If a file context ID is provided, retrieve the text content from our
+        # in-memory store and prepend it to the user's prompt.
         final_prompt = message
         if file_context_id and file_context_id in uploaded_file_contexts:
             context = uploaded_file_contexts[file_context_id]
-            final_prompt = f"Using the following context, please answer the question.\n\n--- Context ---\n{context}\n--- End Context ---\n\nQuestion: {message}"
+            final_prompt = f"Using the following context, please answer the question.\\n\\n--- Context ---\\n{context}\\n--- End Context ---\\n\\nQuestion: {message}"
             logger.info("Used uploaded file context for RAG.")
 
-        # Send the message to the Ollama service
+        # Send the final prompt (with or without RAG context) to the Ollama service.
         try:
             ollama_response = requests.post(
                 'http://localhost:11434/api/generate',
@@ -188,7 +283,16 @@ def api_chat_message():
 
 @app.route('/api/ollama/status')
 def api_ollama_status():
-    """Check the status of the Ollama service"""
+    """
+    Checks the status of the Ollama service.
+
+    This is a mock implementation. In a real scenario, this endpoint would
+    ping the Ollama service to verify its actual availability and which
+    model is currently loaded.
+
+    Returns:
+        JSON object with the mock status of the Ollama service.
+    """
     # This is a mock implementation. In a real scenario, you would
     # ping the Ollama service to check its actual status.
     is_online = True  # Assume it's online for this example
@@ -207,7 +311,16 @@ def api_ollama_status():
 
 @app.route('/api/ollama/models', methods=['GET'])
 def api_get_ollama_models():
-    """Get the list of available Ollama models"""
+    """
+    Gets the list of available models from the Ollama service.
+
+    It queries the Ollama `/api/tags` endpoint and transforms the response
+    into the format expected by the application's frontend.
+
+    Returns:
+        JSON object containing a list of formatted models and the current model,
+        or an error if the service is unavailable.
+    """
     try:
         ollama_response = requests.get('http://localhost:11434/api/tags')
         ollama_response.raise_for_status()
@@ -222,7 +335,7 @@ def api_get_ollama_models():
                 "speed": "Fast" # Mock data
             })
 
-        # Assume the first model is the current one for now
+        # Assume the first model in the list is the default/current one.
         current_model = formatted_models[0]['name'] if formatted_models else 'N/A'
             
         return jsonify({
@@ -238,7 +351,19 @@ def api_get_ollama_models():
         return jsonify({"error": "An unexpected error occurred."}), 500
 
 def extract_text_from_file(file):
-    """Extracts text content from various file types."""
+    """
+    Extracts text content from various file types for the RAG pipeline.
+
+    This function acts as a dispatcher, detecting the file extension and
+    using the appropriate library (`PyPDF2` for PDF, `pandas` for CSV/XLSX)
+    to parse the file and return its text content as a string.
+
+    Args:
+        file: A file object from the Flask request.
+
+    Returns:
+        A string containing the extracted text from the file.
+    """
     filename = file.filename
     content = ""
     logger.info(f"Starting text extraction for file: {filename}")
@@ -266,7 +391,20 @@ def extract_text_from_file(file):
 
 @app.route('/api/chat/upload', methods=['POST'])
 def api_chat_upload():
-    """Handles text file uploads for RAG context."""
+    """
+    Handles file uploads for creating RAG context.
+
+    This endpoint receives a file from the client, validates it, and then
+    passes it to the `extract_text_from_file` function. The extracted text
+    is stored in the `uploaded_file_contexts` dictionary, keyed by the
+    user's session ID, making it available for future chat messages.
+
+    Headers:
+        X-Session-ID (str): The unique session ID for the user.
+
+    Returns:
+        JSON object indicating success or failure, and the file_id.
+    """
     if 'file' not in request.files:
         return jsonify({"success": False, "error": "No file part in the request."}), 400
     
@@ -291,7 +429,8 @@ def api_chat_upload():
         if not content:
             return jsonify({"success": False, "error": "Could not extract text from file."}), 400
 
-        # Store the content. Using session_id as the key.
+        # Store the extracted content in our in-memory dictionary.
+        # The key is the user's session ID, which we also use as the file_id.
         file_id = session_id 
         uploaded_file_contexts[file_id] = content
         
@@ -304,7 +443,20 @@ def api_chat_upload():
     
 @app.route('/api/ollama/model', methods=['POST'])
 def api_select_ollama_model():
-    """Selects the Ollama model to use."""
+    """
+    Mock endpoint to handle model selection from the client.
+
+    In a real application, this would store the user's model preference in
+    their server-side session or a database. For this simplified version,
+    it just logs the request and returns a success message.
+
+    Body:
+        A JSON object containing:
+        - model (str): The name of the model the user selected.
+
+    Returns:
+        JSON object indicating success.
+    """
     # This is a mock endpoint for now. In a real application, you would
     # store this preference in the user's session.
     data = request.get_json()
@@ -317,7 +469,12 @@ def api_select_ollama_model():
 
 @app.route('/api/network/discover', methods=['POST'])
 def api_network_discover():
-    """Mock network discovery"""
+    """
+    Mock endpoint for triggering a network discovery task.
+
+    Returns:
+        JSON object with a mock success message.
+    """
     return jsonify({
         'status': 'success',
         'message': 'Network discovery completed (mock)',
@@ -327,7 +484,12 @@ def api_network_discover():
 
 @app.route('/api/network/audit', methods=['POST'])
 def api_network_audit():
-    """Mock network audit"""
+    """
+    Mock endpoint for triggering a network audit task.
+
+    Returns:
+        JSON object with a mock success message.
+    """
     return jsonify({
         'status': 'success',
         'message': 'Network audit completed (mock)',
@@ -339,15 +501,39 @@ def api_network_audit():
 
 @app.errorhandler(404)
 def not_found(error):
-    """404 error handler"""
+    """
+    Custom 404 error handler.
+
+    Renders the generic error page with a 'Page not found' message.
+
+    Args:
+        error: The error object.
+
+    Returns:
+        A rendered error template and a 404 status code.
+    """
     return render_template('error.html', error="Page not found"), 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    """500 error handler"""
+    """
+    Custom 500 error handler.
+
+    Renders the generic error page with an 'Internal server error' message.
+
+    Args:
+        error: The error object.
+
+    Returns:
+        A rendered error template and a 500 status code.
+    """
     return render_template('error.html', error="Internal server error"), 500
 
 if __name__ == '__main__':
+    # Entry point for running the application directly.
+    # The debug=True flag enables auto-reloading on code changes and provides
+    # a helpful debugger in the browser. This should be set to False in a
+    # production environment.
     logger.info("Starting simplified Flask application...")
     logger.info("Access the application at: http://localhost:5003")
     logger.info("This is a simplified version - full features require additional setup")
