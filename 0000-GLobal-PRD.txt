@@ -1,0 +1,37 @@
+# Global Product Requirements Document (PRD)
+
+## Project: AI-Powered Network Automation Assistant
+
+This document outlines the planned features for development. The features are ordered by priority, which is determined by dependencies and immediate user value.
+
+### Development Order & Feature List
+
+1.  **Feature: Persistent Conversation History (ID: 0200)**
+    - Description: Save chat sessions to a database so users can resume conversations later. This is foundational for stateful interactions.
+
+2.  **Feature: User Authentication (ID: 0300)**
+    - Description: Implement a secure login system. This is a prerequisite for user-specific data and permissions.
+
+3.  **Feature: Role-Based Access Control (RBAC) (ID: 0400)**
+    - Description: Restrict access to features based on user roles (e.g., Admin, Operator). Depends on User Authentication.
+
+4.  **Feature: Real-time Streaming Chat Responses (ID: 0100)**
+    - Description: Show AI responses as they are being generated for a better user experience. Improves perceived performance.
+
+5.  **Feature: Pre-built Command Library (ID: 0500)**
+    - Description: Provide users with a searchable library of common network commands and templates.
+
+6.  **Feature: Natural Language to Network Command Translation (ID: 0600)**
+    - Description: Allow users to describe a task in plain English, which the AI translates into executable commands.
+
+7.  **Feature: Configuration Validation and Dry-Run (ID: 0700)**
+    - Description: Before applying any configuration, validate its syntax and perform a "dry run" to predict its impact.
+
+8.  **Feature: Enhanced RAG with More Sources (ID: 0900)**
+    - Description: Expand RAG to ingest data from network monitoring tools, external documentation, or APIs.
+
+9.  **Feature: Visual Network Topology Mapping (ID: 0800)**
+    - Description: Generate and display interactive diagrams of the network topology.
+
+10. **Feature: Extensible Plugin Architecture (ID: 1000)**
+    - Description: Create a system that allows third-party developers to add new functionalities as plugins. 

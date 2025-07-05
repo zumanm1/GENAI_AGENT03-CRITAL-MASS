@@ -1,0 +1,18 @@
+# Global Progress Tracker
+
+## Project: AI-Powered Network Automation Assistant
+
+This tracker provides a high-level overview of the development status for each planned feature.
+
+### Feature Status
+
+- [ ] 0100: Real-time Streaming Chat Responses (Status: Pending)
+- [ ] 0200: Persistent Conversation History (Status: Pending)
+- [ ] 0300: User Authentication (Status: Pending)
+- [ ] 0400: Role-Based Access Control (RBAC) (Status: Pending)
+- [ ] 0500: Pre-built Command Library (Status: Pending)
+- [ ] 0600: Natural Language to Network Command Translation (Status: Pending)
+- [ ] 0700: Configuration Validation and Dry-Run (Status: Pending)
+- [ ] 0800: Visual Network Topology Mapping (Status: Pending)
+- [ ] 0900: Enhanced RAG with More Sources (Status: Pending)
+- [ ] 1000: Extensible Plugin Architecture (Status: Pending) 
