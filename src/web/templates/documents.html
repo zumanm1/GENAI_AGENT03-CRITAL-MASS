@@ -40,7 +40,7 @@
                                 <tr>
                                     <td><strong>{{ doc.filename }}</strong></td>
                                     <td>{{ doc.file_type|upper }}</td>
-                                    <td>{{ "%.1f"|format(doc.file_size/1024) }} KB</td>
+                                    <td>{{ "%.1f"|format(doc.size/1024) }} KB</td>
                                     <td>
                                         <span class="badge bg-{% if doc.status == 'processed' %}success{% elif doc.status == 'error' %}danger{% else %}warning{% endif %}">
                                             {{ doc.status }}

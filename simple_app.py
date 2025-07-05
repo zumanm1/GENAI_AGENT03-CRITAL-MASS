@@ -13,6 +13,9 @@ from datetime import datetime, timezone
 import json
 import requests
 import uuid
+from PyPDF2 import PdfReader
+import pandas as pd
+import io
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -75,9 +78,9 @@ def chat():
 def documents():
     """Document management page"""
     mock_documents = [
-        {"id": 1, "name": "Network_Config_Guide.pdf", "size": "2.5MB", "uploaded": "2024-01-10"},
-        {"id": 2, "name": "OSPF_Troubleshooting.docx", "size": "1.8MB", "uploaded": "2024-01-12"},
-        {"id": 3, "name": "BGP_Best_Practices.pdf", "size": "3.2MB", "uploaded": "2024-01-14"},
+        {"id": 1, "filename": "Network_Config_Guide.pdf", "file_type": "pdf", "size": 2500000, "status": "processed", "uploaded_at": datetime(2024, 1, 10, 10, 30)},
+        {"id": 2, "filename": "OSPF_Troubleshooting.docx", "file_type": "docx", "size": 1800000, "status": "processed", "uploaded_at": datetime(2024, 1, 12, 11, 0)},
+        {"id": 3, "filename": "BGP_Best_Practices.pdf", "file_type": "pdf", "size": 3200000, "status": "error", "uploaded_at": datetime(2024, 1, 14, 15, 45)},
     ]
     return render_template('documents.html', documents=mock_documents)
 
@@ -234,6 +237,24 @@ def api_get_ollama_models():
         logger.error(f"Error fetching Ollama models: {e}")
         return jsonify({"error": "An unexpected error occurred."}), 500
 
+def extract_text_from_file(file):
+    """Extracts text content from various file types."""
+    filename = file.filename
+    content = ""
+    if filename.endswith('.txt'):
+        content = file.read().decode('utf-8')
+    elif filename.endswith('.pdf'):
+        reader = PdfReader(file)
+        for page in reader.pages:
+            content += page.extract_text()
+    elif filename.endswith('.csv'):
+        df = pd.read_csv(io.StringIO(file.read().decode('utf-8')))
+        content = df.to_string()
+    elif filename.endswith('.xlsx'):
+        df = pd.read_excel(file)
+        content = df.to_string()
+    return content
+
 @app.route('/api/chat/upload', methods=['POST'])
 def api_chat_upload():
     """Handles text file uploads for RAG context."""
@@ -249,24 +270,27 @@ def api_chat_upload():
     if not session_id:
         return jsonify({"success": False, "error": "No session ID provided."}), 400
 
-    if file and file.filename.endswith('.txt'):
-        try:
-            content = file.read().decode('utf-8')
-            
-            # Store the content. Using session_id as the key.
-            # In a multi-user system, you'd want a more robust key.
-            file_id = session_id 
-            uploaded_file_contexts[file_id] = content
-            
-            logger.info(f"Uploaded file for session {session_id}, size: {len(content)} bytes.")
-            
-            return jsonify({"success": True, "file_id": file_id})
-        except Exception as e:
-            logger.error(f"Error reading or storing uploaded file: {e}")
-            return jsonify({"success": False, "error": "Could not process file."}), 500
-    
-    return jsonify({"success": False, "error": "Invalid file type. Only .txt files are allowed."}), 400
+    allowed_extensions = ['.txt', '.pdf', '.csv', '.xlsx']
+    if not any(file.filename.endswith(ext) for ext in allowed_extensions):
+        return jsonify({"success": False, "error": f"Invalid file type. Allowed: {', '.join(allowed_extensions)}"}), 400
 
+    try:
+        content = extract_text_from_file(file)
+        
+        if not content:
+            return jsonify({"success": False, "error": "Could not extract text from file."}), 400
+
+        # Store the content. Using session_id as the key.
+        file_id = session_id 
+        uploaded_file_contexts[file_id] = content
+        
+        logger.info(f"Uploaded file for session {session_id}, size: {len(content)} bytes.")
+        
+        return jsonify({"success": True, "file_id": file_id})
+    except Exception as e:
+        logger.error(f"Error reading or storing uploaded file: {e}")
+        return jsonify({"success": False, "error": "Could not process file."}), 500
+    
 @app.route('/api/ollama/model', methods=['POST'])
 def api_select_ollama_model():
     """Selects the Ollama model to use."""
