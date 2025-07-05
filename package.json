@@ -1,0 +1,14 @@
+{
+  "name": "genai_agent_ui_tests",
+  "version": "1.0.0",
+  "description": "UI tests for the Network Automation AI Agent",
+  "main": "test_chat.js",
+  "scripts": {
+    "test": "node test_chat.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^22.0.0"
+  }
+} 
