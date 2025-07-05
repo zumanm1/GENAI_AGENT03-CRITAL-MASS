@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: Role-Based Access Control (RBAC)
+- **ID:** 0400
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 

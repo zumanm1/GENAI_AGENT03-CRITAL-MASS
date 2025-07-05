@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: Pre-built Command Library
+- **ID:** 0500
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 

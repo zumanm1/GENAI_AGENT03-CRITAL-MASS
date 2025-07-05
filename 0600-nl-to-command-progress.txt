@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: Natural Language to Network Command Translation
+- **ID:** 0600
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 

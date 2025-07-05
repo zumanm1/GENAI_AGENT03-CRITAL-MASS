@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: User Authentication
+- **ID:** 0300
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 

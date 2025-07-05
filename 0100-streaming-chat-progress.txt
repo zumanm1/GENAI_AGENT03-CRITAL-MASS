@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: Real-time Streaming Chat Responses
+- **ID:** 0100
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 

@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: Persistent Conversation History
+- **ID:** 0200
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 

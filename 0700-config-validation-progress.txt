@@ -1,0 +1,11 @@
+# Progress Tracker
+
+## Feature: Configuration Validation and Dry-Run
+- **ID:** 0700
+
+---
+
+### Status: Pending
+
+### Notes:
+- No work has started on this feature yet. 
