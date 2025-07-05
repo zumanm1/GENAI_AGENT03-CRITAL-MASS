@@ -1,0 +1,32 @@
+# Product Requirements Document (PRD)
+
+## Feature: Configuration Validation and Dry-Run
+- **ID:** 0700
+- **Version:** 1.0 (File Version: 00)
+
+---
+
+### 1. Problem Statement
+Applying incorrect or incomplete configurations to network devices can cause outages. Before pushing changes, operators need confidence that the configuration is syntactically correct and will have the intended effect.
+
+### 2. Proposed Solution
+Integrate a configuration validation engine. When a user provides a configuration snippet (either by uploading a file or through chat), the AI assistant will:
+1.  Identify the device type (e.g., Cisco IOS, Arista EOS).
+2.  Check the configuration for syntax errors against a known schema or by using a validation library (e.g., Batfish, Scrapli).
+3.  Perform a "dry-run" analysis to predict what changes the configuration will make to the device's state.
+4.  Present the validation results and the predicted changes to the user for confirmation before any real deployment.
+
+### 3. User Stories
+- As a network engineer, I can submit a configuration file and have the AI validate its syntax before I deploy it.
+- As a network engineer, I can see a summary of the changes (e.g., "this will add 2 VLANs and modify 1 interface") that my configuration will make.
+- As a network engineer, I can receive warnings about potential issues or deprecated commands in my configuration.
+
+### 4. Acceptance Criteria
+- [ ] The system can ingest a network configuration snippet or file.
+- [ ] The system can correctly identify the network device OS for the given configuration.
+- [ ] The backend includes a library or service for syntax validation (e.g., integrating an open-source tool).
+- [ ] The AI provides a clear, human-readable summary of the validation results (pass/fail) and any errors found.
+- [ ] The AI provides a "dry-run" report detailing the predicted operational changes.
+- [ ] The validation is performed in a safe, isolated environment and does not touch any live network devices.
+
+--- 

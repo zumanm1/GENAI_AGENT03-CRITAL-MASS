@@ -1,0 +1,29 @@
+# Product Requirements Document (PRD)
+
+## Feature: Pre-built Command Library
+- **ID:** 0500
+- **Version:** 1.0 (File Version: 00)
+
+---
+
+### 1. Problem Statement
+Network operators frequently use a set of common commands for diagnostics and configuration. Typing these commands repeatedly is inefficient and prone to error. Users may not remember the exact syntax for less common commands.
+
+### 2. Proposed Solution
+Create a new section in the application that displays a library of pre-built network commands and configuration templates. This library will be searchable and categorized (e.g., by vendor, by function). Users can click a command to copy it or, ideally, to insert it directly into the chat input for the AI to execute or explain.
+
+### 3. User Stories
+- As a network operator, I can browse a library of common network commands so that I can quickly find the one I need.
+- As a network operator, I can search the library by keyword (e.g., 'vlan', 'bgp', 'cisco') to filter the list of commands.
+- As a network operator, I can click a command in the library to easily copy it to my clipboard.
+- As a network operator, I can click a button to send a command from the library directly to the AI assistant for analysis or execution context.
+
+### 4. Acceptance Criteria
+- [ ] A new page or a modal window is created to host the command library.
+- [ ] The command library data is stored in a structured format (e.g., a JSON file or a database table).
+- [ ] The library UI displays commands in a clear, categorized, and searchable list.
+- [ ] Each command entry has a "Copy" button.
+- [ ] Each command entry has a "Use Command" button that populates the chat input field with the command text.
+- [ ] The initial library is populated with at least 20 common commands for major network vendors.
+
+--- 

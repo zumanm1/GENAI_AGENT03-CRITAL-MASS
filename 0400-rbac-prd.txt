@@ -1,0 +1,29 @@
+# Product Requirements Document (PRD)
+
+## Feature: Role-Based Access Control (RBAC)
+- **ID:** 0400
+- **Version:** 1.0 (File Version: 00)
+- **Dependency:** User Authentication (ID: 0300)
+
+---
+
+### 1. Problem Statement
+With multiple users, there is a need to restrict access to certain features. For example, regular users should not be able to access administrative settings, and some users might only have read-only access to certain data.
+
+### 2. Proposed Solution
+Implement an RBAC system on top of the existing authentication. A `Role` model will be added to the database, and a relationship will be created between Users and Roles. Application routes and features will be decorated with checks to ensure the currently logged-in user has the required role to access them.
+
+### 3. User Stories
+- As an administrator, I can assign roles (e.g., 'Admin', 'Operator', 'Viewer') to users to control their permissions.
+- As an administrator, I can access an admin dashboard to manage users and roles.
+- As an operator, I can use the core chat and RAG features but cannot manage users.
+- As a viewer, I can only see certain data (like documents) but cannot interact with the chat or upload new files.
+
+### 4. Acceptance Criteria
+- [ ] A `Role` model and a many-to-many relationship between `User` and `Role` models are created in the database.
+- [ ] Decorators or middleware are implemented to protect routes based on user roles.
+- [ ] An interface for administrators to manage user roles is created.
+- [ ] Access to specific features (e.g., file upload, chat interaction, admin panels) is correctly restricted based on the user's assigned role(s).
+- [ ] Users are shown an "Access Denied" page or message when they attempt to access a resource their role does not permit.
+
+--- 

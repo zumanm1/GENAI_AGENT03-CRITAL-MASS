@@ -1,0 +1,27 @@
+# Product Requirements Document (PRD)
+
+## Feature: Persistent Conversation History
+- **ID:** 0200
+- **Version:** 1.0 (File Version: 00)
+
+---
+
+### 1. Problem Statement
+Users lose their entire conversation history when they close or refresh the browser tab. There is no way to review past interactions or resume a previous conversation, forcing them to start over every time.
+
+### 2. Proposed Solution
+Implement a database (e.g., SQLite for simplicity, or a more robust solution like PostgreSQL) to store chat messages. Each message will be associated with a user's session. The backend will be updated to save each user and AI message to the database. The frontend will be updated to fetch and display the history for the current session when the chat page loads.
+
+### 3. User Stories
+- As a user, when I reload the chat page, I can see my previous messages so that I can continue my conversation.
+- As a user, I can have multiple chat sessions (e.g., in different browser tabs) and the history for each should be kept separate.
+- As a user, I want my conversation history to be saved automatically without any manual action.
+
+### 4. Acceptance Criteria
+- [ ] A database schema for storing chat messages (including session ID, sender, message content, timestamp) is created.
+- [ ] The backend `/api/chat/message` endpoint must save the user's message and the AI's response to the database.
+- [ ] A new backend endpoint (e.g., `/api/chat/history/<session_id>`) must be created to retrieve the chat history for a given session.
+- [ ] The frontend must call the history endpoint on page load and render the past messages in the chat window.
+- [ ] The solution must handle new sessions and existing sessions correctly.
+
+--- 

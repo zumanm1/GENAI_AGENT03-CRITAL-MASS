@@ -1,0 +1,28 @@
+# Product Requirements Document (PRD)
+
+## Feature: Visual Network Topology Mapping
+- **ID:** 0800
+- **Version:** 1.0 (File Version: 00)
+
+---
+
+### 1. Problem Statement
+Understanding network architecture from text-based configuration files is difficult and time-consuming. It's hard to visualize how devices are interconnected, which impedes troubleshooting and planning.
+
+### 2. Proposed Solution
+Create a feature that automatically generates a visual network topology map. The AI will parse uploaded configuration files (or potentially connect to live devices) to identify devices, their interfaces, and the links between them. This data will be fed to a frontend library (like D3.js, Vis.js, or Mermaid.js) to render an interactive diagram showing the network topology.
+
+### 3. User Stories
+- As a network architect, I can upload a set of configuration files and see a visual diagram of my network topology.
+- As a network operator, I can click on a device in the diagram to see its details (e.g., hostname, model, IP addresses).
+- As a network operator, I can zoom and pan the diagram to focus on specific parts of the network.
+- As a user, I can see links between devices light up or be annotated with interface information when I hover over them.
+
+### 4. Acceptance Criteria
+- [ ] A new page is created in the application to display the network map.
+- [ ] The backend has a parsing engine capable of extracting device and link information from configuration files (e.g., from Cisco/Juniper `show cdp/lldp neighbors` output).
+- [ ] The backend provides an API endpoint that serves the topology data in a structured format (e.g., nodes and edges).
+- [ ] The frontend uses a JavaScript library to render the topology data as an interactive graph.
+- [ ] The map is interactive, allowing for panning, zooming, and clicking on nodes for more information.
+
+--- 

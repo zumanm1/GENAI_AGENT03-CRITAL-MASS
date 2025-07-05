@@ -1,0 +1,26 @@
+# Product Requirements Document (PRD)
+
+## Feature: Real-time Streaming Chat Responses
+- **ID:** 0100
+- **Version:** 1.0 (File Version: 00)
+
+---
+
+### 1. Problem Statement
+When the AI is generating a long response, the user has to wait without any feedback, which can feel slow and unresponsive. The user doesn't know if the system is working or has hung.
+
+### 2. Proposed Solution
+Implement a streaming connection between the frontend and backend. The backend will use the Ollama API's streaming capability to send back the AI's response token-by-token. The frontend will receive these tokens and append them to the chat window in real-time, showing the message as it's being generated.
+
+### 3. User Stories
+- As a user, I can see the AI's response appear word-by-word so that I get immediate feedback and can start reading before the full response is complete.
+- As a user, I can see a typing indicator while the AI is generating the response so that I know the system is actively working on my request.
+
+### 4. Acceptance Criteria
+- [ ] The backend must have a new API endpoint (e.g., `/api/chat/stream`) that supports Server-Sent Events (SSE).
+- [ ] The frontend JavaScript must be able to connect to the streaming endpoint and handle the incoming events.
+- [ ] AI response text should be smoothly appended to the message bubble in the chat UI as tokens arrive.
+- [ ] The user experience should feel significantly more responsive for long-form answers.
+- [ ] The existing non-streaming chat functionality should remain as a fallback or be fully replaced.
+
+--- 

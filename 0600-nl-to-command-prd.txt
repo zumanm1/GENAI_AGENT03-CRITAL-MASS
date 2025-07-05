@@ -1,0 +1,27 @@
+# Product Requirements Document (PRD)
+
+## Feature: Natural Language to Network Command Translation
+- **ID:** 0600
+- **Version:** 1.0 (File Version: 00)
+
+---
+
+### 1. Problem Statement
+Users, especially those less experienced with specific vendor CLI syntax, may know what they want to achieve but not the exact commands to do it. Translating intent into precise, error-free commands is a major challenge.
+
+### 2. Proposed Solution
+Leverage a powerful AI model (like the one already integrated) with a specialized system prompt to translate natural language descriptions of networking tasks into executable CLI commands. The user will type a request (e.g., "show me the bgp neighbors on router-1"), and the AI will respond with the corresponding command(s) (e.g., `show ip bgp summary`). The system should also ask for clarification if the request is ambiguous.
+
+### 3. User Stories
+- As a junior network operator, I can describe a task in plain English, and the AI will give me the correct command syntax.
+- As a senior network operator, I can quickly generate commands for a different vendor's equipment without looking up the documentation.
+- As a user, if my request is ambiguous (e.g., "configure the interface"), the AI will ask me clarifying questions (e.g., "Which interface? What IP address?").
+
+### 4. Acceptance Criteria
+- [ ] The AI model is prompted with a carefully engineered system message that primes it for command generation tasks.
+- [ ] The system can accurately translate common networking requests (e.g., show commands, basic interface configuration, VLAN setup) into the correct CLI syntax for at least two major vendors (e.g., Cisco IOS, Juniper Junos).
+- [ ] The AI's response clearly separates the generated command from any explanatory text.
+- [ ] For ambiguous user requests, the AI's response is a clarifying question rather than a guess.
+- [ ] The RAG context from uploaded files can be used by the AI to understand the network's context (e.g., hostnames, interface names) for more accurate command generation.
+
+--- 
