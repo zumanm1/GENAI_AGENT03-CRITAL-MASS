@@ -30,7 +30,7 @@ const assert = require('assert');
         
         // 3. Verify the message is in the history
         console.log('Verifying chat history...');
-        await page.waitForTimeout(3000);
+        await new Promise(r => setTimeout(r, 3000));
         const pageContent = await page.content();
         
         assert(pageContent.includes(uniqueMessage), `FAILURE: The unique message was not found in the chat history.`);
