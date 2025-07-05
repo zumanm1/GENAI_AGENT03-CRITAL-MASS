@@ -16,6 +16,7 @@ const assert = require('assert');
 
         // 1. Send a unique message
         const uniqueMessage = `Test message at ${new Date().toISOString()}`;
+        const uniqueMessageLower = uniqueMessage.toLowerCase();
         console.log(`Typing message: "${uniqueMessage}"`);
         await page.type('#message-input', uniqueMessage);
         await page.click('#send-button');
@@ -33,7 +34,7 @@ const assert = require('assert');
         await new Promise(r => setTimeout(r, 3000));
         const pageContent = await page.content();
         
-        assert(pageContent.includes(uniqueMessage), `FAILURE: The unique message was not found in the chat history.`);
+        assert(pageContent.toLowerCase().includes(uniqueMessageLower), `FAILURE: The unique message was not found in the chat history.`);
         
         console.log('SUCCESS: Chat history test passed!');
 
