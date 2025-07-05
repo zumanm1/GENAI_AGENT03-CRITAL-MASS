@@ -18,7 +18,7 @@ import pandas as pd
 import io
 
 # Setup logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
@@ -241,18 +241,27 @@ def extract_text_from_file(file):
     """Extracts text content from various file types."""
     filename = file.filename
     content = ""
+    logger.info(f"Starting text extraction for file: {filename}")
     if filename.endswith('.txt'):
+        logger.info("Detected .txt file. Reading content directly.")
         content = file.read().decode('utf-8')
     elif filename.endswith('.pdf'):
+        logger.info("Detected .pdf file. Starting PDF text extraction.")
         reader = PdfReader(file)
-        for page in reader.pages:
+        num_pages = len(reader.pages)
+        for i, page in enumerate(reader.pages):
+            logger.info(f"Extracting text from PDF page {i + 1}/{num_pages}")
             content += page.extract_text()
     elif filename.endswith('.csv'):
+        logger.info("Detected .csv file. Parsing with pandas.")
         df = pd.read_csv(io.StringIO(file.read().decode('utf-8')))
         content = df.to_string()
     elif filename.endswith('.xlsx'):
+        logger.info("Detected .xlsx file. Parsing with pandas.")
         df = pd.read_excel(file)
         content = df.to_string()
+    
+    logger.info(f"Finished text extraction for {filename}. Extracted {len(content)} characters.")
     return content
 
 @app.route('/api/chat/upload', methods=['POST'])
@@ -263,6 +272,8 @@ def api_chat_upload():
     
     file = request.files['file']
     session_id = request.headers.get('X-Session-ID')
+
+    logger.info(f"Received file upload for session {session_id}: {file.filename}")
 
     if file.filename == '':
         return jsonify({"success": False, "error": "No selected file."}), 400
