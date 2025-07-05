@@ -16,6 +16,7 @@ import uuid
 from PyPDF2 import PdfReader
 import pandas as pd
 import io
+import sqlite3
 
 # ==============================================================================
 # Logging and Application Setup
@@ -55,6 +56,56 @@ MOCK_STATS = {
     "total_documents": 3,
     "last_audit": "2024-01-15 10:30:00"
 }
+
+# Path to SQLite database for chat history
+DB_PATH = os.path.join(os.path.dirname(__file__), 'chat_history.db')
+
+def init_db():
+    """Initializes the SQLite database with a messages table."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            role TEXT,
+            content TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
+
+init_db()
+
+
+def save_message(session_id: str, role: str, content: str):
+    """Persists a chat message to the database."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+        (session_id, role, content)
+    )
+    conn.commit()
+    conn.close()
+
+
+def get_history(session_id: str):
+    """Retrieves the full chat history for a session ID."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT role, content, timestamp FROM messages WHERE session_id = ? ORDER BY id ASC",
+        (session_id,)
+    )
+    rows = cur.fetchall()
+    conn.close()
+    return [
+        {"role": role, "content": content, "timestamp": ts} for role, content, ts in rows
+    ]
 
 # ==============================================================================
 # Frontend Rendering Routes
@@ -223,10 +274,12 @@ def api_chat_message():
         message = ""
         model = None
         file_context_id = None
+        session_id = None
         if data:
             message = data.get('content', '').lower()
             model = data.get('model')
             file_context_id = data.get('file_context_id')
+            session_id = data.get('session_id')
 
         if not message:
             return jsonify({'response': "It seems I didn't get a message. Please try asking your question again."})
@@ -271,6 +324,14 @@ def api_chat_message():
         except requests.exceptions.RequestException as e:
             logger.error(f"Could not connect to Ollama service: {e}")
             ai_response = "I'm having trouble connecting to the AI service. Please ensure Ollama is running."
+
+        # Persist the assistant's response.
+        if session_id:
+            save_message(session_id, 'assistant', ai_response)
+
+        # Save the user's message to the chat history.
+        if session_id:
+            save_message(session_id, 'user', message)
 
         return jsonify({
             'response': ai_response,
@@ -498,6 +559,15 @@ def api_network_audit():
         'failed': 3,
         'timestamp': datetime.now(timezone.utc).isoformat()
     })
+
+@app.route('/api/chat/history/<session_id>', methods=['GET'])
+def api_chat_history(session_id):
+    """Returns all stored messages for the provided session ID."""
+    try:
+        return jsonify(get_history(session_id))
+    except Exception as e:
+        logger.error(f"Error fetching chat history: {e}")
+        return jsonify([]), 500
 
 @app.errorhandler(404)
 def not_found(error):
