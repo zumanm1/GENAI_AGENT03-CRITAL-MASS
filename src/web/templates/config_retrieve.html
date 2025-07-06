@@ -11,10 +11,21 @@
                     <h4 class="mb-0"><i class="fas fa-download me-2"></i>Configuration Retrieve</h4>
                 </div>
                 <div class="card-body">
-                    <p class="lead">This section will allow you to pull running/startup configs from devices.</p>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Feature coming soon. Stay tuned!
+                    <p class="lead">Select devices to retrieve basic info (<code>show ip int brief</code>, <code>show version</code>).</p>
+<form method="post">
+    <div class="mb-3">
+        <label for="devices" class="form-label">Devices (comma separated, e.g. R15,R16)</label>
+        <input type="text" class="form-control" id="devices" name="devices" placeholder="R15,R16" value="{{ request.form.devices or '' }}">
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-play me-1"></i>Run</button>
+</form>
+                    {% if outputs %}
+<hr>
+<h5>Results</h5>
+<pre class="bg-light p-3 small">{{ outputs|tojson(indent=2) }}</pre>
+{% endif %}
+
+
                     </div>
                 </div>
             </div>

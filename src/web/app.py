@@ -79,10 +79,17 @@ def devices():
         return render_template('error.html', error=str(e)), 500
 
 
-@app.route('/config-retrieve')
+@app.route('/config-retrieve', methods=['GET', 'POST'])
 def config_retrieve():
-    """Configuration retrieve placeholder page"""
-    return render_template('config_retrieve.html')
+    """Retrieve basic device info via Nornir/Netmiko."""
+    outputs = None
+    if request.method == 'POST':
+        from network.retrieve import retrieve_basic_info  # local import to avoid overhead on initial load
+        devices_raw = request.form.get('devices', '')
+        selected = [d.strip() for d in devices_raw.split(',') if d.strip()]
+        host_ports = {k: v for k, v in retrieve_basic_info.__defaults__[0].items() if not selected or k in selected}
+        outputs = retrieve_basic_info(host_ports=host_ports)
+    return render_template('config_retrieve.html', outputs=outputs)
 
 
 @app.route('/config-push')
