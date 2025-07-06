@@ -4,7 +4,8 @@
   "description": "UI tests for the Network Automation AI Agent",
   "main": "test_chat.js",
   "scripts": {
-    "test": "node test_chat.js"
+    "test": "node test_chat.js",
+    "test-auth": "node test_auth.js"
   },
   "author": "",
   "license": "ISC",

@@ -60,25 +60,29 @@
             <h5 class="mt-3 mb-3">AI Model</h5>
             <div id="model-list" class="list-group">
                 <!-- AI models will be dynamically loaded here -->
-            </div>
+                        </div>
             <hr>
             <div class="sidebar-footer">
                 <small>Current Model:</small>
                 <strong id="current-model-display">N/A</strong>
-            </div>
-        </div>
+                    </div>
+                </div>
 
         <!-- Main Chat Area -->
         <div class="col-md-9 chat-area">
             <div class="chat-header">
                 <h4 class="mb-0">AI Network Assistant</h4>
-            </div>
+                            </div>
             <div id="chat-messages" class="chat-messages p-3">
-                <!-- Chat messages will be appended here -->
+                {% for message in history %}
+                    <div class="message {{ 'user-message' if message.message_type == 'user' else 'assistant-message' }}">
+                        <div class="message-content">{{ message.content }}</div>
+                    </div>
+                {% endfor %}
             </div>
             <div id="attached-file-display" class="p-2 border-top" style="display: none;">
                 <!-- Attached file info will be shown here -->
-            </div>
+                    </div>
             <div class="chat-input-section">
                 <form id="chat-form" class="d-flex p-3 border-top">
                     <!-- Hidden file input for RAG -->
@@ -94,9 +98,9 @@
                     
                     <!-- Send button -->
                     <button type="submit" id="send-button" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
             </div>
         </div>
     </div>
@@ -121,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- State Variables ---
     // The unique session ID is rendered by the Flask template.
     // This is crucial for keeping this user's RAG context separate from others.
-    const sessionId = '{{ session_id }}'; 
+    const sessionId = '{{ session_id }}';
     let currentModel = ''; // The name of the currently selected Ollama model.
     let attachedFileId = null; // The ID of the file uploaded for RAG context.
 
@@ -162,38 +166,41 @@ document.addEventListener('DOMContentLoaded', function() {
         // Display the user's message immediately in the UI.
         addMessage(content, true);
         
-        // Construct the payload for the API request.
         const payload = {
-            content: content,
+            message: content,
             session_id: sessionId,
-            model: currentModel
+            model: currentModel,
+            stream: true
         };
-        
-        // If a file has been uploaded for this session, include its ID.
-        if (attachedFileId) {
-            payload.file_context_id = attachedFileId;
-        }
 
-        // Send the message to the backend chat endpoint.
-        fetch('/api/chat/message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Display the AI's response.
-            addMessage(data.response, false);
-        })
-        .catch(error => {
-            console.error('Error sending message:', error);
-            addMessage('Error: Could not connect to the server.', false, true);
-        })
-        .finally(() => {
+        const eventSource = new EventSource(`/api/chat/message?payload=${encodeURIComponent(JSON.stringify(payload))}`);
+        let assistantMessageElement = null;
+
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            if (data.error) {
+                addMessage(`Error: ${data.error}`, false, true);
+                eventSource.close();
+                return;
+            }
+
+            if (!assistantMessageElement) {
+                assistantMessageElement = addMessage('', false);
+            }
+
+            assistantMessageElement.querySelector('.message-content').innerHTML += data.response;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+
+        eventSource.onerror = function(err) {
+            console.error("EventSource failed:", err);
+            addMessage('Error: Could not connect to the server for streaming.', false, true);
+            eventSource.close();
             // Re-enable the form.
             sendButton.disabled = false;
             sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-        });
+        };
     }
 
     /**
@@ -210,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 modelList.innerHTML = ''; // Clear existing list.
                 currentModel = data.current_model;
                 currentModelDisplay.textContent = currentModel;
-
+                
                 // Create a button for each available model.
                 data.models.forEach(model => {
                     const modelButton = document.createElement('a');
@@ -271,6 +278,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function loadHistory() {
+        fetch(`/api/chat/history/${sessionId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                chatMessages.innerHTML = ''; // Clear existing messages.
+                
+                data.forEach(message => {
+                    addMessage(message.content, message.message_type === 'user');
+                });
+            })
+            .catch(error => {
+                console.error('Error loading chat history:', error);
+                addMessage('Error: Could not load chat history.', false, true);
+            });
+    }
+
     // =============================================================================
     // Event Listeners
     // =============================================================================
@@ -299,13 +326,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Remove active class from all buttons and add to the clicked one.
                 document.querySelectorAll('#model-list .list-group-item').forEach(btn => btn.classList.remove('active'));
                 target.classList.add('active');
-                
+        
                 // Inform the user of the model switch.
                 addMessage(`Switched to model: ${modelName}`, false, true);
-
+        
                 // (Optional) Inform the backend. This is currently a mock endpoint.
                 fetch('/api/ollama/model', {
-                    method: 'POST',
+            method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ model: modelName })
                 });
@@ -327,11 +354,19 @@ document.addEventListener('DOMContentLoaded', function() {
         fileInput.value = '';
     });
 
+    // Check for a command from the library
+    const commandToUse = localStorage.getItem('command_to_use');
+    if (commandToUse) {
+        messageInput.value = commandToUse;
+        localStorage.removeItem('command_to_use');
+    }
+
     // =============================================================================
     // Initial Page Load Actions
     // =============================================================================
     addMessage("Hello! I'm your Network Automation AI Assistant. I can help you with network configuration, troubleshooting, and automation tasks. What would you like to know?", false);
     loadModels();
+    loadHistory();
 });
 </script>
 {% endblock %} 

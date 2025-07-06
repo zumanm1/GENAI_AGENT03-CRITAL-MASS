@@ -1,0 +1,131 @@
+2025-07-06 02:49:15,769 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:49:15,770 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:15,770 - INFO - sqlalchemy.engine.Engine - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:49:15,770 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:15,771 - INFO - sqlalchemy.engine.Engine - [cached since 0.0007627s ago] ('Operator', 1, 0)
+2025-07-06 02:49:15,771 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:15,771 - INFO - sqlalchemy.engine.Engine - [cached since 0.001081s ago] ('Viewer', 1, 0)
+2025-07-06 02:49:15,772 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:49:15,772 - INFO - sqlalchemy.engine.Engine - [generated in 0.00009s] ()
+2025-07-06 02:49:15,773 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:49:15,776 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 02:49:15,784 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 02:49:30,770 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:49:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:50:00,752 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:50:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:50:30,755 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:50:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:51:30,752 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:51:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:52:30,749 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:52:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:53:30,763 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:53:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:54:30,754 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:54:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:55:30,759 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:55:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:56:00,175 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:56:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:56:30,171 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:56:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:57:00,173 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:57:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:57:27,773 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:57:27,778 - INFO - sqlalchemy.engine.Engine - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:27,778 - INFO - sqlalchemy.engine.Engine - [generated in 0.00057s] (1, 1, 0)
+2025-07-06 02:57:27,780 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:57:27,784 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:57:27] "[31m[1mGET /documents HTTP/1.1[0m" 403 -
+2025-07-06 02:57:32,234 - INFO - werkzeug -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/src/network/topology.py', reloading
+2025-07-06 02:57:32 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:57:32 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:57:32 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:57:32 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:57:32 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:57:32 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:57:32 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:57:32 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:57:32,945 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:57:32,946 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:32,946 - INFO - sqlalchemy.engine.Engine - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:57:32,947 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:32,947 - INFO - sqlalchemy.engine.Engine - [cached since 0.000829s ago] ('Operator', 1, 0)
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.000829s ago] ('Operator', 1, 0)
+2025-07-06 02:57:32,947 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:32,948 - INFO - sqlalchemy.engine.Engine - [cached since 0.001121s ago] ('Viewer', 1, 0)
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001121s ago] ('Viewer', 1, 0)
+2025-07-06 02:57:32,949 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:57:32,949 - INFO - sqlalchemy.engine.Engine - [generated in 0.00009s] ()
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00009s] ()
+2025-07-06 02:57:32,949 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:57:32 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:57:32,953 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 02:57:32 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 02:57:32,961 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 02:57:32 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 02:57:47,355 - INFO - werkzeug -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/simple_app.py', reloading
+2025-07-06 02:57:47 - werkzeug - INFO - _internal - _log -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/simple_app.py', reloading

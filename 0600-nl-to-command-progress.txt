@@ -1,4 +1,14 @@
-# Progress Tracker
+# Progress Tracker: Natural Language to Network Command Translation (0600)
+
+## Feature Status: Completed
+
+| Task ID | Description | Status | Assignee | Dependencies |
+|---|---|---|---|---|
+| system-prompt-engineering | The AI model is prompted with a carefully engineered system message | Completed | | - |
+| command-translation | The system can accurately translate common networking requests | Completed | | system-prompt-engineering |
+| response-formatting | The AI's response clearly separates the generated command from any explanatory text | Completed | | command-translation |
+| ambiguity-handling | For ambiguous user requests, the AI's response is a clarifying question | Completed | | command-translation |
+| rag-context-usage | The RAG context from uploaded files can be used by the AI for more accurate command generation | Completed | | - |
 
 ## Feature: Natural Language to Network Command Translation
 - **ID:** 0600

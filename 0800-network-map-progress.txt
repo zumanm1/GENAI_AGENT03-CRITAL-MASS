@@ -5,7 +5,16 @@
 
 ---
 
-### Status: Pending
+### Status: Completed
 
 ### Notes:
-- No work has started on this feature yet. 
+- Added `network_map.html` page with Cytoscape.js visualization.
+- Added `/network-map` route and `/api/network/topology` endpoint returning mock topology.
+- Created `src/network/topology.py` for topology provider.
+- Added `NetworkDevice` and `NetworkLink` models to the database.
+- Created a database seeding function to populate the topology with mock data on startup.
+- The `/api/network/topology` endpoint now fetches data from the database, making the map dynamic.
+- The `/network-map` page now displays the database-driven topology.
+- Feature 0800 is considered complete for v1.
+
+Next: integrate real discovery data, allow filtering, unit tests. 

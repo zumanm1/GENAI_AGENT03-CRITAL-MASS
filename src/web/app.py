@@ -3,6 +3,11 @@ Main Flask Application
 Network Automation AI Agent Web Interface
 """
 
+from src.rag.document_processor import document_processor
+from src.core.chromadb_service import chromadb_service
+from src.core.ollama_service import ollama_service
+from src.core.database import db_manager
+from src.core.config import config
 import logging
 import os
 import sys
@@ -14,11 +19,6 @@ import uuid
 # Add src directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from src.core.config import config
-from src.core.database import db_manager
-from src.core.ollama_service import ollama_service
-from src.core.chromadb_service import chromadb_service
-from src.rag.document_processor import document_processor
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -42,17 +42,17 @@ def index():
     try:
         # Get basic stats
         stats = db_manager.get_stats()
-        
+
         # Get recent devices
         devices = db_manager.get_all_devices()
-        
+
         # Get recent audit results
         recent_audits = db_manager.get_latest_audit_results(limit=5)
-        
-        return render_template('dashboard.html', 
-                             stats=stats,
-                             devices=devices,
-                             recent_audits=recent_audits)
+
+        return render_template('dashboard.html',
+                               stats=stats,
+                               devices=devices,
+                               recent_audits=recent_audits)
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
         return render_template('error.html', error=str(e)), 500
@@ -64,7 +64,7 @@ def chat():
     # Generate session ID if not exists
     if 'session_id' not in session:
         session['session_id'] = str(uuid.uuid4())
-    
+
     return render_template('chat.html', session_id=session['session_id'])
 
 
@@ -103,7 +103,9 @@ def audit():
     try:
         devices = db_manager.get_all_devices()
         recent_audits = db_manager.get_latest_audit_results(limit=10)
-        return render_template('audit.html', devices=devices, recent_audits=recent_audits)
+        return render_template(
+            "audit.html", devices=devices, recent_audits=recent_audits
+        )
     except Exception as e:
         logger.error(f"Error loading audit page: {e}")
         return render_template('error.html', error=str(e)), 500
@@ -116,10 +118,10 @@ def settings():
         # Get available models
         models = ollama_service.list_models()
         current_model = config.ollama['MODEL_NAME']
-        
-        return render_template('settings.html', 
-                             models=models, 
-                             current_model=current_model)
+
+        return render_template('settings.html',
+                               models=models,
+                               current_model=current_model)
     except Exception as e:
         logger.error(f"Error loading settings: {e}")
         return render_template('error.html', error=str(e)), 500
@@ -170,7 +172,7 @@ def api_create_device():
         data = request.get_json()
         if not data:
             return jsonify({'error': 'No data provided'}), 400
-        
+
         device = db_manager.create_device(data)
         return jsonify(device.to_dict()), 201
     except Exception as e:
@@ -198,7 +200,7 @@ def api_update_device(device_id):
         data = request.get_json()
         if not data:
             return jsonify({'error': 'No data provided'}), 400
-        
+
         device = db_manager.update_device(device_id, data)
         if device:
             return jsonify(device.to_dict())
@@ -223,35 +225,77 @@ def api_delete_device(device_id):
 
 @app.route('/api/chat/message', methods=['POST'])
 def api_chat_message():
-    """Send chat message"""
+    """Send chat message and get AI response with history"""
     try:
         data = request.get_json()
         if not data or 'content' not in data:
             return jsonify({'error': 'Message content required'}), 400
-        
-        session_id = data.get('session_id', session.get('session_id', str(uuid.uuid4())))
-        
+
+        message_content = data['content']
+        session_id = data.get('session_id', session.get(
+            'session_id', str(uuid.uuid4())))
+
         # Save user message
-        user_message = db_manager.create_chat_message({
+        db_manager.create_chat_message({
             'session_id': session_id,
             'message_type': 'user',
-            'content': data['content']
+            'content': message_content
         })
-        
-        # Process message with AI agent
+
+        # --- Refactored Logic with Chat History ---
+
+        history_context = ''
+        try:
+            # 1. Query last N messages
+            history_messages = db_manager.get_chat_messages(
+                session_id, limit=20)
+
+            # 2. Build formatted history string
+            formatted_history = []
+            for msg in reversed(history_messages):  # Oldest first
+                role = '[USER]' if msg.message_type == 'user' else '[AI]'
+                formatted_history.append(f"{role} {msg.content}")
+            history_context = "\n".join(formatted_history)
+
+        except Exception as db_error:
+            logger.error(f"Error querying chat history: {db_error}")
+            # 5. Fallback: prepend raw history to message (if available)
+            history_context = ""  # Reset context on error
+
+        # 3. Merge history with RAG context (if any)
+        # For now, we'll just prepend history. A more advanced RAG implementation
+        # would merge this more intelligently.
+
+        final_message = message_content
+        if history_context:
+            final_message = f"{history_context}\n\n[USER] {message_content}"
+
+        # 4. Pass merged context to ollama_service
+        # Note: We are now using a streaming-compatible method if available
+        # For this example, we'll stick to chat_completion but with full context.
+
+        system_prompt = (
+            """You are a helpful network automation AI assistant. You will be
+            provided with chat history. Keep your responses concise and
+            relevant to the conversation."""
+        )
+
         messages = [
-            {"role": "system", "content": "You are a helpful network automation AI assistant. Help users with network configuration, troubleshooting, and automation tasks. Be concise but informative."},
-            {"role": "user", "content": data['content']}
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": final_message}
         ]
-        
-        ai_result = ollama_service.chat_completion(messages, temperature=0.7, max_tokens=500)
-        
-        if ai_result['success']:
-            response_content = ai_result['response']
-        else:
-            response_content = f"I'm sorry, I'm having trouble processing your request right now. Error: {ai_result.get('error', 'Unknown error')}"
-        
-        # Save assistant response
+
+        # Using stream_chat, assuming it's the new standard
+        # For demonstration, we'll collect the stream into a single response.
+
+        response_generator = ollama_service.stream_chat(
+            messages, temperature=0.7)
+
+        response_content = "".join(response_generator)
+
+        # --- End of Refactored Logic ---
+
+        # 6. Keep existing logic for saving AI messages
         assistant_message = db_manager.create_chat_message({
             'session_id': session_id,
             'message_type': 'assistant',
@@ -259,13 +303,13 @@ def api_chat_message():
             'agent_name': 'NetworkAgent',
             'agent_role': 'Network Assistant'
         })
-        
+
         return jsonify({
             'session_id': session_id,
             'response': response_content,
             'message_id': assistant_message.id if assistant_message else None
         })
-        
+
     except Exception as e:
         logger.error(f"Error processing chat message: {e}")
         return jsonify({'error': str(e)}), 500
@@ -305,7 +349,7 @@ def api_network_audit():
         data = request.get_json()
         device_names = data.get('device_names', [])
         audit_types = data.get('audit_types', ['ping'])
-        
+
         # TODO: Implement network audit
         # For now, return mock response
         return jsonify({
@@ -355,25 +399,25 @@ def api_analyze_config():
         data = request.get_json()
         if not data or 'config_text' not in data:
             return jsonify({'error': 'Configuration text required'}), 400
-        
+
         config_text = data['config_text']
         device_name = data.get('device_name', 'Unknown')
-        
+
         # Analyze with Ollama
         result = ollama_service.analyze_network_config(config_text)
-        
+
         if result['success']:
             # Save analysis result to database (optional)
-            analysis_data = {
-                'device_name': device_name,
-                'analysis_type': 'config_analysis',
-                'input_text': config_text[:500],  # Truncate for storage
-                'ai_response': result['response'],
-                'model_used': result['model'],
-                'tokens_used': result.get('completion_tokens', 0),
-                'timestamp': result['timestamp']
-            }
-            
+            # analysis_data = {
+            # 'device_name': device_name,
+            # 'analysis_type': 'config_analysis',
+            # 'input_text': config_text[:500],  # Truncate for storage
+            # 'ai_response': result['response'],
+            # 'model_used': result['model'],
+            # 'tokens_used': result.get('completion_tokens', 0),
+            # 'timestamp': result['timestamp']
+            # }
+
             return jsonify({
                 'success': True,
                 'analysis': result['response'],
@@ -386,7 +430,7 @@ def api_analyze_config():
                 'success': False,
                 'error': result.get('error', 'Analysis failed')
             }), 500
-            
+
     except Exception as e:
         logger.error(f"Error analyzing config: {e}")
         return jsonify({'error': str(e)}), 500
@@ -399,13 +443,14 @@ def api_generate_commands():
         data = request.get_json()
         if not data or 'task_description' not in data:
             return jsonify({'error': 'Task description required'}), 400
-        
+
         task_description = data['task_description']
         device_type = data.get('device_type', 'cisco_ios')
-        
+
         # Generate commands with Ollama
-        result = ollama_service.generate_network_command(task_description, device_type)
-        
+        result = ollama_service.generate_network_command(
+            task_description, device_type)
+
         if result['success']:
             return jsonify({
                 'success': True,
@@ -420,7 +465,7 @@ def api_generate_commands():
                 'success': False,
                 'error': result.get('error', 'Command generation failed')
             }), 500
-            
+
     except Exception as e:
         logger.error(f"Error generating commands: {e}")
         return jsonify({'error': str(e)}), 500
@@ -433,13 +478,14 @@ def api_troubleshoot():
         data = request.get_json()
         if not data or 'issue_description' not in data:
             return jsonify({'error': 'Issue description required'}), 400
-        
+
         issue_description = data['issue_description']
         device_logs = data.get('device_logs', '')
-        
+
         # Get troubleshooting guidance with Ollama
-        result = ollama_service.troubleshoot_network_issue(issue_description, device_logs)
-        
+        result = ollama_service.troubleshoot_network_issue(
+            issue_description, device_logs)
+
         if result['success']:
             return jsonify({
                 'success': True,
@@ -453,7 +499,7 @@ def api_troubleshoot():
                 'success': False,
                 'error': result.get('error', 'Troubleshooting failed')
             }), 500
-            
+
     except Exception as e:
         logger.error(f"Error in troubleshooting: {e}")
         return jsonify({'error': str(e)}), 500
@@ -479,17 +525,17 @@ def api_add_document():
         data = request.get_json()
         if not data or 'content' not in data:
             return jsonify({'error': 'Document content required'}), 400
-        
+
         document_id = data.get('id', str(uuid.uuid4()))
         content = data['content']
         metadata = data.get('metadata', {})
-        
+
         # Add document type if not specified
         if 'type' not in metadata:
             metadata['type'] = 'network_document'
-        
+
         success = chromadb_service.add_document(document_id, content, metadata)
-        
+
         if success:
             return jsonify({
                 'success': True,
@@ -501,7 +547,7 @@ def api_add_document():
                 'success': False,
                 'error': 'Failed to add document'
             }), 500
-            
+
     except Exception as e:
         logger.error(f"Error adding document: {e}")
         return jsonify({'error': str(e)}), 500
@@ -514,20 +560,21 @@ def api_search_documents():
         data = request.get_json()
         if not data or 'query' not in data:
             return jsonify({'error': 'Search query required'}), 400
-        
+
         query = data['query']
         n_results = data.get('n_results', 5)
         filter_metadata = data.get('filter', None)
-        
-        results = chromadb_service.search_documents(query, n_results, filter_metadata)
-        
+
+        results = chromadb_service.search_documents(
+            query, n_results, filter_metadata)
+
         return jsonify({
             'success': True,
             'query': query,
             'results': results,
             'count': len(results)
         })
-        
+
     except Exception as e:
         logger.error(f"Error searching documents: {e}")
         return jsonify({'error': str(e)}), 500
@@ -540,31 +587,47 @@ def api_rag_query():
         data = request.get_json()
         if not data or 'query' not in data:
             return jsonify({'error': 'Query required'}), 400
-        
+
         query = data['query']
         n_results = data.get('n_results', 3)
-        
+
         # Search for relevant documents
         search_results = chromadb_service.search_documents(query, n_results)
-        
+
         if not search_results:
             # No relevant documents found, use basic AI response
             messages = [
-                {"role": "system", "content": "You are a helpful network automation AI assistant."},
-                {"role": "user", "content": query}
+                {
+                    "role": "system",
+                    "content": "You are a helpful network automation AI assistant.",
+                },
+                {"role": "user", "content": query},
             ]
         else:
             # Build context from search results
-            context = "\n\n".join([f"Document: {result['content'][:500]}..." for result in search_results])
-            
+            context = "\n\n".join(
+                [
+                    f"Document: {result['content'][:500]}..."
+                    for result in search_results
+                ]
+            )
+
             messages = [
-                {"role": "system", "content": f"You are a helpful network automation AI assistant. Use the following context to answer questions:\n\nContext:\n{context}"},
-                {"role": "user", "content": query}
+                {
+                    "role": "system",
+                    "content": f"""You are a helpful network automation AI assistant.
+                    Use the following context to answer questions:
+
+                    Context:
+                    {context}""",
+                },
+                {"role": "user", "content": query},
             ]
-        
+
         # Get AI response with context
-        ai_result = ollama_service.chat_completion(messages, temperature=0.7, max_tokens=500)
-        
+        ai_result = ollama_service.chat_completion(
+            messages, temperature=0.7, max_tokens=500)
+
         if ai_result['success']:
             return jsonify({
                 'success': True,
@@ -579,7 +642,7 @@ def api_rag_query():
                 'success': False,
                 'error': ai_result.get('error', 'AI processing failed')
             }), 500
-            
+
     except Exception as e:
         logger.error(f"Error in RAG query: {e}")
         return jsonify({'error': str(e)}), 500
@@ -591,19 +654,19 @@ def api_upload_document():
     try:
         if 'file' not in request.files:
             return jsonify({'error': 'No file provided'}), 400
-        
+
         file = request.files['file']
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
-        
+
         # Save file temporarily
         filename = file.filename
         temp_path = os.path.join('data', 'documents', filename)
         file.save(temp_path)
-        
+
         # Process the document
         success = document_processor.process_file(temp_path)
-        
+
         if success:
             return jsonify({
                 'message': 'Document processed successfully',
@@ -611,7 +674,7 @@ def api_upload_document():
             })
         else:
             return jsonify({'error': 'Failed to process document'}), 500
-            
+
     except Exception as e:
         logger.error(f"Document upload error: {e}")
         return jsonify({'error': str(e)}), 500
@@ -620,28 +683,28 @@ def api_upload_document():
 @app.errorhandler(404)
 def not_found(error):
     """Handle 404 errors"""
-    return render_template('error.html', 
-                         error="Page not found", 
-                         error_code=404), 404
+    return render_template('error.html',
+                           error="Page not found",
+                           error_code=404), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
     """Handle 500 errors"""
     logger.error(f"Internal server error: {error}")
-    return render_template('error.html', 
-                         error="Internal server error", 
-                         error_code=500), 500
+    return render_template('error.html',
+                           error="Internal server error",
+                           error_code=500), 500
 
 
 def initialize_default_devices():
     """Initialize default devices from configuration"""
     try:
         logger.info("Initializing default devices...")
-        
+
         # Get configured devices
         configured_devices = config.get_network_devices()
-        
+
         for device_name, device_config in configured_devices.items():
             # Check if device already exists
             existing_device = db_manager.get_device_by_name(device_name)
@@ -659,24 +722,24 @@ def initialize_default_devices():
                     'status': 'unknown',
                     'vendor': 'Cisco',
                 }
-                
-                device = db_manager.create_device(device_data)
+
+                db_manager.create_device(device_data)
                 logger.info(f"Created device: {device_name}")
             else:
                 logger.info(f"Device already exists: {device_name}")
-                
+
     except Exception as e:
         logger.error(f"Error initializing default devices: {e}")
 
 
 if __name__ == '__main__':
     logger.info("Starting Network Automation AI Agent...")
-    
+
     # Initialize default devices if needed
     initialize_default_devices()
-    
+
     app.run(
         host=config.flask.get('HOST', '0.0.0.0'),
         port=config.flask.get('PORT', 5003),
         debug=True
-    ) 
+    )

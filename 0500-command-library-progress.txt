@@ -1,4 +1,15 @@
-# Progress Tracker
+# Progress Tracker: Pre-built Command Library (0500)
+
+## Feature Status: Completed
+
+| Task ID | Description | Status | Assignee | Dependencies |
+|---|---|---|---|---|
+| ui-library-page | A new page or a modal window is created to host the command library | Completed | | - |
+| data-storage | The command library data is stored in a structured format | Completed | | - |
+| ui-display | The library UI displays commands in a clear, categorized, and searchable list | Completed | | ui-library-page |
+| action-copy | Each command entry has a "Copy" button | Completed | | ui-display |
+| action-use | Each command entry has a "Use Command" button that populates the chat input | Completed | | ui-display |
+| initial-population | The initial library is populated with at least 20 common commands | Completed | | data-storage |
 
 ## Feature: Pre-built Command Library
 - **ID:** 0500

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Command Library - Network AI Agent{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Command Library</h2>
+    <input type="text" id="search-input" class="form-control mb-3" placeholder="Search commands...">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="commands-table-body">
+            {% for command in commands %}
+            <tr>
+                <td>{{ command.category }}</td>
+                <td><code>{{ command.command }}</code></td>
+                <td>{{ command.description }}</td>
+                <td>
+                    <button class="btn btn-sm btn-secondary copy-btn" data-command="{{ command.command }}">Copy</button>
+                    <button class="btn btn-sm btn-primary use-btn" data-command="{{ command.command }}">Use</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const tableBody = document.getElementById('commands-table-body');
+    const originalRows = Array.from(tableBody.querySelectorAll('tr'));
+
+    searchInput.addEventListener('keyup', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        tableBody.innerHTML = '';
+        originalRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                tableBody.appendChild(row);
+            }
+        });
+    });
+
+    document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const command = this.dataset.command;
+            navigator.clipboard.writeText(command).then(() => {
+                alert('Command copied to clipboard!');
+            });
+        });
+    });
+
+    document.querySelectorAll('.use-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const command = this.dataset.command;
+            // This assumes there's a chat page at /chat with an input field #message-input
+            // For a more robust solution, this could use a shared state or local storage
+            localStorage.setItem('command_to_use', command);
+            window.location.href = '/chat';
+        });
+    });
+});
+</script>
+{% endblock %} 

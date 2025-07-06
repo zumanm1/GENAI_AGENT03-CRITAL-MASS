@@ -16,7 +16,9 @@ DOCUMENTS_DIR = DATA_DIR / "documents"
 
 # Flask Configuration
 FLASK_CONFIG = {
-    "SECRET_KEY": os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production"),
+    "SECRET_KEY": os.environ.get(
+        "SECRET_KEY", "dev-secret-key-change-in-production"
+    ),
     "DEBUG": os.environ.get("FLASK_DEBUG", "True").lower() == "true",
     "HOST": os.environ.get("FLASK_HOST", "0.0.0.0"),
     "PORT": int(os.environ.get("FLASK_PORT", 5003)),
@@ -81,7 +83,8 @@ LOGGING_CONFIG = {
             "DATEFMT": "%Y-%m-%d %H:%M:%S",
         },
         "detailed": {
-            "FORMAT": "%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(funcName)s - %(message)s",
+            "FORMAT": "%(asctime)s - %(name)s - %(levelname)s - %(module)s - "
+            "%(funcName)s - %(message)s",
             "DATEFMT": "%Y-%m-%d %H:%M:%S",
         },
     },
@@ -154,12 +157,14 @@ AGENT_CONFIG = {
     "NETWORK_ENGINEER": {
         "ROLE": "Senior Network Engineer",
         "GOAL": "Analyze network configurations and provide expert recommendations",
-        "BACKSTORY": "Expert in network design, configuration, and troubleshooting with 15+ years experience",
+        "BACKSTORY": "Expert in network design, configuration, and troubleshooting with "
+        "15+ years experience",
     },
     "TROUBLESHOOTER": {
         "ROLE": "Network Troubleshooting Specialist",
         "GOAL": "Diagnose network issues and provide step-by-step solutions",
-        "BACKSTORY": "Specialized in network problem diagnosis and resolution with deep protocol knowledge",
+        "BACKSTORY": "Specialized in network problem diagnosis and resolution with "
+        "deep protocol knowledge",
     },
     "CONFIG_MANAGER": {
         "ROLE": "Configuration Management Specialist",
@@ -191,7 +196,7 @@ def create_directories():
         DOCUMENTS_DIR,
         CHROMADB_CONFIG["PERSIST_DIRECTORY"],
     ]
-    
+
     for directory in directories:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
@@ -201,7 +206,7 @@ create_directories()
 # Export main configuration
 __all__ = [
     "FLASK_CONFIG",
-    "OLLAMA_CONFIG", 
+    "OLLAMA_CONFIG",
     "CHROMADB_CONFIG",
     "NETWORK_CONFIG",
     "RAG_CONFIG",
@@ -219,4 +224,4 @@ __all__ = [
     "LOGS_DIR",
     "DB_DIR",
     "DOCUMENTS_DIR",
-] 
+]

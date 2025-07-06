@@ -10,12 +10,17 @@ const assert = require('assert');
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
         const page = await browser.newPage();
-        const testUrl = 'http://127.0.0.1:5003/chat';
+        const testUrl = 'http://127.0.0.1:5003/login?autologin=true';
         console.log(`Navigating to ${testUrl}...`);
         await page.goto(testUrl, { waitUntil: 'networkidle2' });
 
+        // Ensure we are on the chat page after auto-login
+        if (page.url().includes('/login')) {
+            throw new Error('Auto-login failed – still on /login page.');
+        }
+
         // 1. Send a unique message
-        const uniqueMessage = `Test message at ${new Date().toISOString()}`;
+        const uniqueMessage = `Test message at ${new Date().toISOString()}`
         const uniqueMessageLower = uniqueMessage.toLowerCase();
         console.log(`Typing message: "${uniqueMessage}"`);
         await page.type('#message-input', uniqueMessage);

@@ -1,0 +1,1124 @@
+2025-07-06 00:31:17,422 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 00:31:17,424 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:17,424 - INFO - sqlalchemy.engine.Engine - [generated in 0.00019s] ('Admin', 1, 0)
+2025-07-06 00:31:17,426 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:17,426 - INFO - sqlalchemy.engine.Engine - [cached since 0.001792s ago] ('Operator', 1, 0)
+2025-07-06 00:31:17,426 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:17,426 - INFO - sqlalchemy.engine.Engine - [cached since 0.002272s ago] ('Viewer', 1, 0)
+2025-07-06 00:31:17,429 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 00:31:17,429 - INFO - sqlalchemy.engine.Engine - [generated in 0.00016s] ()
+2025-07-06 00:31:17,429 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 00:31:22,441 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 00:31:22,441 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-07-06 00:31:22,442 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 00:31:22 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 00:31:22 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 00:31:23 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 00:31:23 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 00:31:23 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 00:31:23 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 00:31:23 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 00:31:23 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 00:31:23,268 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 00:31:23,270 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:23,270 - INFO - sqlalchemy.engine.Engine - [generated in 0.00025s] ('Admin', 1, 0)
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00025s] ('Admin', 1, 0)
+2025-07-06 00:31:23,271 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:23,271 - INFO - sqlalchemy.engine.Engine - [cached since 0.001317s ago] ('Operator', 1, 0)
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001317s ago] ('Operator', 1, 0)
+2025-07-06 00:31:23,271 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 00:31:23,271 - INFO - sqlalchemy.engine.Engine - [cached since 0.001825s ago] ('Viewer', 1, 0)
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001825s ago] ('Viewer', 1, 0)
+2025-07-06 00:31:23,274 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 00:31:23,274 - INFO - sqlalchemy.engine.Engine - [generated in 0.00023s] ()
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00023s] ()
+2025-07-06 00:31:23,275 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 00:31:23 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 00:31:23,280 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 00:31:23 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 00:31:23,292 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 00:31:23 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 00:31:30,810 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:31:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:31:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:31:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:32:30,806 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:32:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:32:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:32:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:33:30,815 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:33:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:33:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:33:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:34:30,804 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:34:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:34:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:34:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:35:30,810 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:35:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:35:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:35:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:36:30,807 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:36:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:36:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:36:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:37:30,805 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:37:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:37:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:37:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:38:30,803 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:38:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:38:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:38:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:39:30,805 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:39:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:39:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:39:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:40:30,807 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:40:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:40:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:40:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:41:30,802 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:41:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:41:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:41:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:42:30,815 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:42:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:42:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:42:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:43:30,799 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:43:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:43:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:43:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:44:30,615 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:44:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:44:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:44:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:45:30,602 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:45:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:45:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:45:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:46:30,611 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:46:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:46:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:46:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:47:30,601 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:47:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:47:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:47:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:48:30,591 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:48:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:48:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:48:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:49:30,612 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:49:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:49:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:49:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:50:30,593 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:50:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:50:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:50:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:51:30,590 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:51:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:51:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:51:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:52:30,577 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:52:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:52:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:52:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:53:30,577 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:53:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:53:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:53:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:54:30,573 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:54:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:54:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:54:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:55:30,573 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:55:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:55:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:55:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:56:30,577 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:56:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:56:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:56:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:57:30,564 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:57:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:57:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:57:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:58:30,572 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:58:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:58:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:58:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:59:30,572 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 00:59:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 00:59:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 00:59:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:00:30,443 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:00:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:00:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:00:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:01:30,444 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:01:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:01:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:01:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:02:30,432 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:02:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:02:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:02:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:03:30,433 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:03:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:03:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:03:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:04:30,426 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:04:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:04:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:04:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:05:30,434 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:05:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:05:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:05:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:06:30,421 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:06:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:06:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:06:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:07:30,418 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:07:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:07:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:07:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:08:30,412 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:08:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:08:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:08:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:09:30,417 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:09:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:09:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:09:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:10:30,411 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:10:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:10:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:10:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:11:30,411 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:11:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:11:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:11:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:12:30,401 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:12:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:12:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:12:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:13:30,397 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:13:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:13:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:13:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:14:30,392 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:14:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:14:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:14:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:15:30,394 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:15:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:15:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:15:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:16:30,611 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:16:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:16:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:16:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:17:30,613 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:17:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:17:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:17:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:18:30,615 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:18:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:18:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:18:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:19:30,619 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:19:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:19:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:19:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:20:30,618 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:20:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:20:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:20:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:21:30,619 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:21:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:21:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:21:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:22:30,621 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:22:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:22:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:22:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:23:30,621 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:23:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:23:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:23:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:24:30,623 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:24:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:24:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:24:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:25:30,628 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:25:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:25:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:25:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:26:30,629 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:26:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:26:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:26:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:27:30,628 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:27:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:27:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:27:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:28:30,632 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:28:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:28:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:28:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:29:30,641 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:29:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:29:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:29:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:30:30,637 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:30:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:30:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:30:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:31:30,635 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:31:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:31:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:31:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:32:30,700 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:32:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:32:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:32:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:33:00,699 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:33:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:33:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:33:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:33:30,704 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:33:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:33:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:33:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:34:30,706 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:34:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:34:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:34:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:35:30,705 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:35:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:35:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:35:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:36:30,707 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:36:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:36:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:36:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:37:30,712 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:37:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:37:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:37:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:38:30,712 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:38:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:38:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:38:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:39:30,719 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:39:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:39:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:39:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:40:30,717 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:40:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:40:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:40:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:41:30,712 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:41:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:41:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:41:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:42:30,718 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:42:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:42:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:42:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:43:30,725 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:43:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:43:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:43:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:44:30,725 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:44:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:44:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:44:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:45:30,734 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:45:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:45:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:45:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:46:30,741 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:46:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:46:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:46:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:47:30,729 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:47:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:47:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:47:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:48:30,738 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:48:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:48:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:48:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:49:30,726 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:49:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:49:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:49:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:50:30,731 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:50:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:50:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:50:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:51:30,731 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:51:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:51:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:51:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:52:30,730 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:52:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:52:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:52:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:53:30,729 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:53:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:53:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:53:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:54:30,734 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:54:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:54:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:54:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:55:30,736 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:55:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:55:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:55:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:56:30,735 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:56:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:56:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:56:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:57:30,740 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:57:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:57:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:57:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:58:30,740 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:58:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:58:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:58:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:59:30,743 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 01:59:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 01:59:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 01:59:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:00:30,747 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:00:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:00:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:00:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:01:30,749 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:01:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:01:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:01:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:02:30,762 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:02:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:02:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:02:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:03:30,742 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:03:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:03:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:03:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:04:30,706 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:04:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:04:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:04:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:05:30,705 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:05:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:05:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:05:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:06:30,711 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:06:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:06:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:06:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:07:34 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:07:34 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:07:34 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:07:34 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:07:34 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:07:34 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:07:34 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:07:34 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:07:34,515 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:07:34,516 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:34,516 - INFO - sqlalchemy.engine.Engine - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:07:34,517 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:34,517 - INFO - sqlalchemy.engine.Engine - [cached since 0.000926s ago] ('Operator', 1, 0)
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.000926s ago] ('Operator', 1, 0)
+2025-07-06 02:07:34,517 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:34,517 - INFO - sqlalchemy.engine.Engine - [cached since 0.001266s ago] ('Viewer', 1, 0)
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001266s ago] ('Viewer', 1, 0)
+2025-07-06 02:07:34,519 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:07:34,519 - INFO - sqlalchemy.engine.Engine - [generated in 0.00009s] ()
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00009s] ()
+2025-07-06 02:07:34,519 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:07:34 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:07:39,531 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 02:07:39 - werkzeug - INFO - _internal - _log - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 02:07:39,531 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-07-06 02:07:39 - werkzeug - INFO - _internal - _log - [33mPress CTRL+C to quit[0m
+2025-07-06 02:07:39,532 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 02:07:39 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:07:39 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:07:39 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:07:40 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:07:40 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:07:40 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:07:40 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:07:40 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:07:40 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:07:40,071 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:07:40,072 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:40,072 - INFO - sqlalchemy.engine.Engine - [generated in 0.00010s] ('Admin', 1, 0)
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00010s] ('Admin', 1, 0)
+2025-07-06 02:07:40,072 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:40,072 - INFO - sqlalchemy.engine.Engine - [cached since 0.0007617s ago] ('Operator', 1, 0)
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.0007617s ago] ('Operator', 1, 0)
+2025-07-06 02:07:40,073 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:07:40,073 - INFO - sqlalchemy.engine.Engine - [cached since 0.001061s ago] ('Viewer', 1, 0)
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001061s ago] ('Viewer', 1, 0)
+2025-07-06 02:07:40,075 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:07:40,075 - INFO - sqlalchemy.engine.Engine - [generated in 0.00023s] ()
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00023s] ()
+2025-07-06 02:07:40,075 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:07:40 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:07:40,079 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 02:07:40 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 02:07:40,090 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 02:07:40 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 02:08:30,715 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:08:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:08:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:08:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:09:30,717 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:09:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:09:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:09:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:10:30,715 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:10:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:10:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:10:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:11:30,714 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:11:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:11:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:11:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:12:30,713 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:12:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:12:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:12:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:13:30,715 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:13:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:13:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:13:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:14:30,715 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:14:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:14:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:14:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:15:30,716 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:15:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:15:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:15:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:16:30,720 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:16:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:16:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:16:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:17:30,721 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:17:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:17:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:17:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:18:30,718 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:18:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:18:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:18:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:19:30,724 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:19:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:19:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:19:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:20:30,720 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:20:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:20:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:20:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:21:30,722 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:21:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:21:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:21:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:22:30,722 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:22:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:22:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:22:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:23:30,727 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:23:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:23:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:23:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:24:30,751 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:24:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:24:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:24:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:25:30,730 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:25:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:25:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:25:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:26:30,727 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:26:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:26:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:26:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:27:30,729 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:27:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:27:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:27:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:28:30,728 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:28:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:28:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:28:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:29:30,731 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:29:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:29:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:29:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:30:30,734 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:30:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:30:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:30:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:31:30,730 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:31:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:31:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:31:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:32:30,733 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:32:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:32:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:32:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:33:30,733 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:33:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:33:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:33:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:34:30,739 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:34:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:34:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:34:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:35:30,742 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:35:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:35:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:35:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:36:30,743 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:36:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:36:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:36:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:37:30,743 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:37:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:37:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:37:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:38:30,743 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:38:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:38:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:38:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:39:30,754 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:39:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:39:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:39:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:40:30,744 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:40:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:40:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:40:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:41:30,741 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:41:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:41:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:41:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:42:19,065 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:42:19] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:42:19 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:42:19] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:42:30,153 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:42:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:42:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:42:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:43:00,158 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:43:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:43:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:43:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:43:30,156 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:43:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:43:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:43:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:44:00,161 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:44:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:44:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:44:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:44:30,157 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:44:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:44:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:44:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:45:00,161 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:45:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:45:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:45:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:45:44 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:45:44 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:45:44 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:45:44 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:45:44 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:45:44 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:45:44 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:45:44 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:45:44,464 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:45:44,465 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:44,465 - INFO - sqlalchemy.engine.Engine - [generated in 0.00019s] ('Admin', 1, 0)
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00019s] ('Admin', 1, 0)
+2025-07-06 02:45:44,466 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:44,466 - INFO - sqlalchemy.engine.Engine - [cached since 0.001132s ago] ('Operator', 1, 0)
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001132s ago] ('Operator', 1, 0)
+2025-07-06 02:45:44,467 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:44,467 - INFO - sqlalchemy.engine.Engine - [cached since 0.001493s ago] ('Viewer', 1, 0)
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001493s ago] ('Viewer', 1, 0)
+2025-07-06 02:45:44,469 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:45:44,469 - INFO - sqlalchemy.engine.Engine - [generated in 0.00018s] ()
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00018s] ()
+2025-07-06 02:45:44,469 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:45:44 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:45:49,481 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 02:45:49 - werkzeug - INFO - _internal - _log - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 02:45:49,481 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-07-06 02:45:49 - werkzeug - INFO - _internal - _log - [33mPress CTRL+C to quit[0m
+2025-07-06 02:45:49,482 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 02:45:49 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:45:50 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:45:50 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:45:50 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:45:50 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:45:50 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:45:50 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:45:50 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:45:50 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:45:50,199 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:45:50,200 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:50,200 - INFO - sqlalchemy.engine.Engine - [generated in 0.00017s] ('Admin', 1, 0)
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00017s] ('Admin', 1, 0)
+2025-07-06 02:45:50,201 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:50,201 - INFO - sqlalchemy.engine.Engine - [cached since 0.001001s ago] ('Operator', 1, 0)
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001001s ago] ('Operator', 1, 0)
+2025-07-06 02:45:50,202 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:45:50,202 - INFO - sqlalchemy.engine.Engine - [cached since 0.001339s ago] ('Viewer', 1, 0)
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001339s ago] ('Viewer', 1, 0)
+2025-07-06 02:45:50,204 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:45:50,204 - INFO - sqlalchemy.engine.Engine - [generated in 0.00015s] ()
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00015s] ()
+2025-07-06 02:45:50,204 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:45:50 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:45:50,207 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 02:45:50 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 02:45:50,216 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 02:45:50 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 02:46:00,165 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:46:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:46:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:46:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:46:30,161 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:46:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:46:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:46:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:47:36 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:47:36 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:47:36 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:47:36 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:47:36 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:47:36 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:47:36 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:47:36 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:47:36,689 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:47:36,691 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:36,691 - INFO - sqlalchemy.engine.Engine - [generated in 0.00014s] ('Admin', 1, 0)
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00014s] ('Admin', 1, 0)
+2025-07-06 02:47:36,691 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:36,692 - INFO - sqlalchemy.engine.Engine - [cached since 0.0009063s ago] ('Operator', 1, 0)
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.0009063s ago] ('Operator', 1, 0)
+2025-07-06 02:47:36,692 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:36,692 - INFO - sqlalchemy.engine.Engine - [cached since 0.001213s ago] ('Viewer', 1, 0)
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001213s ago] ('Viewer', 1, 0)
+2025-07-06 02:47:36,694 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:47:36,695 - INFO - sqlalchemy.engine.Engine - [generated in 0.00019s] ()
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00019s] ()
+2025-07-06 02:47:36,695 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:47:36 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:47:41,704 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 02:47:41 - werkzeug - INFO - _internal - _log - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.210:5003
+2025-07-06 02:47:41,704 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-07-06 02:47:41 - werkzeug - INFO - _internal - _log - [33mPress CTRL+C to quit[0m
+2025-07-06 02:47:41,705 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 02:47:41 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:47:42 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:47:42 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:47:42 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:47:42 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:47:42 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:47:42 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:47:42 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:47:42 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:47:42,329 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:47:42,330 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:42,330 - INFO - sqlalchemy.engine.Engine - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:47:42,331 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:42,331 - INFO - sqlalchemy.engine.Engine - [cached since 0.0008477s ago] ('Operator', 1, 0)
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.0008477s ago] ('Operator', 1, 0)
+2025-07-06 02:47:42,331 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:47:42,331 - INFO - sqlalchemy.engine.Engine - [cached since 0.001152s ago] ('Viewer', 1, 0)
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001152s ago] ('Viewer', 1, 0)
+2025-07-06 02:47:42,333 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:47:42,333 - INFO - sqlalchemy.engine.Engine - [generated in 0.00009s] ()
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00009s] ()
+2025-07-06 02:47:42,333 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:47:42 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:47:42,338 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 02:47:42 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 02:47:42,347 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 02:47:42 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 02:47:47,093 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:47:47] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:47:47 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:47:47] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:48:00,161 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:48:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:48:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:48:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:48:30,164 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:48:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:48:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:48:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:49:00,164 - INFO - werkzeug - 127.0.0.1 - - [06/Jul/2025 02:49:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:49:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:49:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:49:04,154 - INFO - werkzeug -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/src/network/config_validator.py', reloading
+2025-07-06 02:49:04 - werkzeug - INFO - _internal - _log -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/src/network/config_validator.py', reloading
+2025-07-06 02:49:04,295 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 02:49:04 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:49:04 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:49:04 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:49:04 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:49:04 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:49:04 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:49:04 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:49:04 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:49:04 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:49:04,874 - INFO - sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:49:04,875 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:04,875 - INFO - sqlalchemy.engine.Engine - [generated in 0.00015s] ('Admin', 1, 0)
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00015s] ('Admin', 1, 0)
+2025-07-06 02:49:04,876 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:04,876 - INFO - sqlalchemy.engine.Engine - [cached since 0.001333s ago] ('Operator', 1, 0)
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001333s ago] ('Operator', 1, 0)
+2025-07-06 02:49:04,877 - INFO - sqlalchemy.engine.Engine - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:04,877 - INFO - sqlalchemy.engine.Engine - [cached since 0.001758s ago] ('Viewer', 1, 0)
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001758s ago] ('Viewer', 1, 0)
+2025-07-06 02:49:04,878 - INFO - sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:49:04,878 - INFO - sqlalchemy.engine.Engine - [generated in 0.00014s] ()
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00014s] ()
+2025-07-06 02:49:04,879 - INFO - sqlalchemy.engine.Engine - COMMIT
+2025-07-06 02:49:04 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:49:04,882 - WARNING - werkzeug -  * Debugger is active!
+2025-07-06 02:49:04 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 02:49:04,891 - INFO - werkzeug -  * Debugger PIN: 331-640-557
+2025-07-06 02:49:04 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 02:49:15,111 - INFO - werkzeug -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/simple_app.py', reloading
+2025-07-06 02:49:15 - werkzeug - INFO - _internal - _log -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/simple_app.py', reloading
+2025-07-06 02:49:15,222 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 02:49:15 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:49:15 - root - INFO - config - _setup_logging - Logging initialized successfully
+2025-07-06 02:49:15 - root - INFO - config - validate_configuration - Configuration validation successful
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:49:15 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("user_roles")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("roles")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("users")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("devices")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("documents")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("audit_results")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - PRAGMA main.table_info("chat_messages")
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [raw sql] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:49:15 - src.core.database - INFO - database - _initialize_database - Database initialized successfully
+2025-07-06 02:49:15 - __main__ - INFO - simple_app - <module> - DatabaseManager initialized successfully.
+2025-07-06 02:49:15 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:49:15 - __main__ - INFO - simple_app - <module> -       Starting Network Automation AI Agent       
+2025-07-06 02:49:15 - __main__ - INFO - simple_app - <module> - =================================================
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00011s] ('Admin', 1, 0)
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.0007627s ago] ('Operator', 1, 0)
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT roles.id AS roles_id, roles.name AS roles_name 
+FROM roles 
+WHERE roles.name = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [cached since 0.001081s ago] ('Viewer', 1, 0)
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT count(*) AS count_1 
+FROM (SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users) AS anon_1
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00009s] ()
+2025-07-06 02:49:15 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:49:15 - werkzeug - WARNING - _internal - _log -  * Debugger is active!
+2025-07-06 02:49:15 - werkzeug - INFO - _internal - _log -  * Debugger PIN: 331-640-557
+2025-07-06 02:49:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:49:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:50:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:50:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:50:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:50:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:51:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:51:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:52:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:52:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:53:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:53:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:54:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:54:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:55:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:55:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:56:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:56:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:56:30 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:56:30] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:57:00 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:57:00] "GET /api/health HTTP/1.1" 200 -
+2025-07-06 02:57:27 - sqlalchemy.engine.Engine - INFO - base - _connection_begin_impl - BEGIN (implicit)
+2025-07-06 02:57:27 - sqlalchemy.engine.Engine - INFO - base - _execute_context - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+ LIMIT ? OFFSET ?
+2025-07-06 02:57:27 - sqlalchemy.engine.Engine - INFO - base - _execute_context - [generated in 0.00057s] (1, 1, 0)
+2025-07-06 02:57:27 - sqlalchemy.engine.Engine - INFO - base - _connection_commit_impl - COMMIT
+2025-07-06 02:57:27 - werkzeug - INFO - _internal - _log - 127.0.0.1 - - [06/Jul/2025 02:57:27] "[31m[1mGET /documents HTTP/1.1[0m" 403 -
+2025-07-06 02:57:32 - werkzeug - INFO - _internal - _log -  * Detected change in '/Users/macbook/Documents/GENAI03/GENAI_AGENT03-CRITAL-MASS/src/network/topology.py', reloading
+2025-07-06 02:57:32,371 - INFO - werkzeug -  * Restarting with stat
+2025-07-06 02:57:32 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:57:47 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:58:18 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 02:58:44 - werkzeug - INFO - _internal - _log -  * Restarting with stat
+2025-07-06 03:02:45 - werkzeug - INFO - _internal - _log -  * Restarting with stat

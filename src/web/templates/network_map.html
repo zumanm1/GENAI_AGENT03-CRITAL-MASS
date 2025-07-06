@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Network Topology - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-3">Network Topology</h1>
+  <p class="text-muted">Interactive visualization of discovered devices and links.</p>
+  <div id="cy" style="width: 100%; height: 600px; border: 1px solid #ddd;"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- Cytoscape.js via CDN -->
+<script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const res = await fetch('/api/network/topology');
+  const topo = await res.json();
+
+  const cy = cytoscape({
+    container: document.getElementById('cy'),
+    style: [{ selector: 'node', style: { 'background-color': '#007bff', label: 'data(label)', color: '#fff' } },
+            { selector: 'edge', style: { width: 2, 'line-color': '#666', 'target-arrow-color': '#666', 'curve-style': 'bezier' } }],
+    layout: { name: 'cose' },
+    elements: topo.elements,
+  });
+});
+</script>
+{% endblock %} 

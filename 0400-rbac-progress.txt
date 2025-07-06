@@ -1,4 +1,14 @@
-# Progress Tracker
+# Progress Tracker: Role-Based Access Control (RBAC) (0400)
+
+## Feature Status: Completed
+
+| Task ID | Description | Status | Assignee | Dependencies |
+|---|---|---|---|---|
+| db-schema-rbac | Create a Role model and a many-to-many relationship between User and Role | Completed | | - |
+| backend-decorators | Implement decorators or middleware to protect routes based on user roles | Completed | | db-schema-rbac |
+| admin-interface | Create an interface for administrators to manage user roles | Completed | | backend-decorators |
+| feature-restriction | Access to specific features is correctly restricted based on the user's role | Completed | | admin-interface |
+| access-denied-handling | Users are shown an "Access Denied" page or message | Completed | | - |
 
 ## Feature: Role-Based Access Control (RBAC)
 - **ID:** 0400

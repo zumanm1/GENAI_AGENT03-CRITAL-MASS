@@ -9,8 +9,8 @@ from .models import Device, Document, AuditResult
 
 __all__ = [
     "AppConfig",
-    "DatabaseManager", 
+    "DatabaseManager",
     "Device",
     "Document",
     "AuditResult",
-] 
+]

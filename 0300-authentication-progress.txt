@@ -1,11 +1,13 @@
-# Progress Tracker
+# Progress Tracker: User Authentication (0300)
 
-## Feature: User Authentication
-- **ID:** 0300
+## Feature Status: In Progress
 
----
-
-### Status: Pending
-
-### Notes:
-- No work has started on this feature yet. 
+| Task ID | Description | Status | Assignee | Dependencies |
+|---|---|---|---|---|
+| db-users-table | Add users table to schema.sql and adjust init_db | Completed | | create-auth-prd |
+| backend-auth | Implement backend routes: /register, /login, /logout and password hashing | Completed | | db-users-table |
+| session-cookie | Issue auth session cookie and integrate with existing chat endpoints (require user logged in) | Completed | | backend-auth |
+| frontend-auth-pages | Create simple HTML templates/pages for login and registration | Completed | | backend-auth |
+| chat-auth-guard | Update chat.html to enforce login (redirect if no user cookie) | Completed | | session-cookie, frontend-auth-pages |
+| manual-test-auth | Manual test flow: register, login, send chat, reload | Completed | | chat-auth-guard |
+| puppeteer-auth-test | Extend Puppeteer test suite to cover authentication flow | Completed | | manual-test-auth |

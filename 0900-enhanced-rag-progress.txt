@@ -5,7 +5,16 @@
 
 ---
 
-### Status: Pending
+### Status: Completed
 
 ### Notes:
 - No work has started on this feature yet. 
+
+- Implemented web scraper connector (`src/rag/web_scraper.py`) that ingests online documentation into ChromaDB.
+- Added `/api/rag/scrape` admin endpoint to trigger scraping jobs.
+- Chat backend now retrieves top-k documents from vector store to enrich prompts.
+- Added dependencies (`chromadb`, `sentence-transformers`, `beautifulsoup4`, `lxml`).
+- Added `/rag-management` page for admins to view ingested documents and trigger new scrapes.
+- Feature 0900 is considered complete for v1.
+
+Next: monitoring-API connector, management UI, additional unit tests. 

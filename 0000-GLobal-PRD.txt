@@ -34,4 +34,31 @@ This document outlines the planned features for development. The features are or
     - Description: Generate and display interactive diagrams of the network topology.
 
 10. **Feature: Extensible Plugin Architecture (ID: 1000)**
-    - Description: Create a system that allows third-party developers to add new functionalities as plugins. 
+    - Description: Create a system that allows third-party developers to add new functionalities as plugins.
+
+### Development Environment Setup (2025-07-06)
+
+To ensure the application starts correctly and IDE features work (IntelliSense, linting, debugging), follow these steps:
+
+1. **Virtual Environment**  
+   The project provides a Python virtual environment in the repository root (`/venv`). If it is missing, create one:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r GENAI_AGENT03-CRITAL-MASS/requirements.txt
+   ```
+   The updated `run_app.sh` automatically detects this environment (either in the project root or one level up) and activates it.
+
+2. **VS Code / IDE Interpreter Selection**  
+   Point your IDE to the interpreter located at `venv/bin/python`. In VS Code, open the Command Palette → *Python: Select Interpreter* and choose the path ending in `venv`.
+
+3. **Common Startup Issues & Fixes**  
+   * *Port already in use* – `run_app.sh` now frees port **5003** automatically.  
+   * *Invalid interpreter* – ensure the selected interpreter matches the virtual environment.  
+   * *Missing packages* – run `pip install -r requirements.txt` inside the activated venv.
+
+4. **Running the App**  
+   ```bash
+   ./GENAI_AGENT03-CRITAL-MASS/run_app.sh
+   ```
+   The script prints URLs for health checks and the dashboard and writes logs to `GENAI_AGENT03-CRITAL-MASS/data/logs`. 

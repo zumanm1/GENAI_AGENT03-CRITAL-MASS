@@ -1,4 +1,14 @@
-# Progress Tracker
+# Progress Tracker: Persistent Conversation History (0200)
+
+## Feature Status: Completed
+
+| Task ID | Description | Status | Assignee | Dependencies |
+|---|---|---|---|---|
+| db-schema-history | Create a database schema for storing chat messages | Completed | | - |
+| backend-save-chat | The backend `/api/chat/message` endpoint must save the user's message and the AI's response to the database | Completed | | db-schema-history |
+| backend-fetch-history | A new backend endpoint must be created to retrieve the chat history | Completed | | db-schema-history |
+| frontend-display-history | The frontend must call the history endpoint on page load and render the past messages | Completed | | backend-fetch-history |
+| session-management | The solution must handle new sessions and existing sessions correctly | Completed | | - |
 
 ## Feature: Persistent Conversation History
 - **ID:** 0200

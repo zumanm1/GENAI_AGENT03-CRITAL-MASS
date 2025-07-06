@@ -1,172 +1,125 @@
 {% extends "base.html" %}
 
-{% block title %}Network Audit - Network Automation AI Agent{% endblock %}
+{% block title %}Configuration Audit - {{ super() }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1><i class="fas fa-search me-2"></i>Network Audit</h1>
-                <button class="btn btn-primary" onclick="startAudit()">
-                    <i class="fas fa-play me-2"></i>Start Audit
+<div class="container mt-5">
+    <h1 class="mb-4">Configuration Validation & Dry-Run</h1>
+    <p class="text-muted mb-4">
+        Upload a network configuration file or paste it into the text area below. The system will validate its syntax
+        and provide a dry-run analysis of the changes it would perform.
+    </p>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="audit-form">
+                <div class="mb-3">
+                    <label for="device-type" class="form-label"><strong>Device Operating System</strong></label>
+                    <select class="form-select" id="device-type" name="device_type" required>
+                        <option value="cisco_ios">Cisco IOS</option>
+                        <option value="juniper_junos">Juniper Junos</option>
+                        <option value="arista_eos">Arista EOS</option>
+                        <option value="cisco_nxos">Cisco NX-OS</option>
+                        <option value="cisco_xr">Cisco IOS-XR</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="config-upload" class="form-label"><strong>Upload Configuration File</strong></label>
+                    <input class="form-control" type="file" id="config-upload" accept=".txt,.conf,.cfg">
+                </div>
+
+                <div class="mb-3">
+                    <label for="config-text" class="form-label"><strong>Or Paste Configuration</strong></label>
+                    <textarea class="form-control" id="config-text" name="config_text" rows="15" placeholder="e.g.,
+interface GigabitEthernet0/1
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+!"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Validate Configuration
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 
-    <!-- Audit Configuration Form -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Audit Configuration</h5>
-                </div>
-                <div class="card-body">
-                    <form id="auditForm" class="audit-form">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="deviceSelect" class="form-label">Select Device</label>
-                                    <select class="form-select device-select" id="deviceSelect" name="device_id">
-                                        <option value="">Choose a device...</option>
-                                        {% for device in devices %}
-                                        <option value="{{ device.id }}">{{ device.name }} ({{ device.host }})</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="auditType" class="form-label">Audit Type</label>
-                                    <select class="form-select" id="auditType" name="audit_type">
-                                        <option value="basic">Basic Configuration Check</option>
-                                        <option value="security">Security Audit</option>
-                                        <option value="performance">Performance Analysis</option>
-                                        <option value="compliance">Compliance Check</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="auditOptions" class="form-label">Audit Options</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="checkInterfaces" name="check_interfaces" checked>
-                                        <label class="form-check-label" for="checkInterfaces">
-                                            Check Interface Status
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="checkRouting" name="check_routing" checked>
-                                        <label class="form-check-label" for="checkRouting">
-                                            Verify Routing Tables
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="checkSecurity" name="check_security">
-                                        <label class="form-check-label" for="checkSecurity">
-                                            Security Configuration
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-play me-2"></i>Start Audit
-                                </button>
-                                <button type="button" class="btn btn-secondary ms-2" onclick="resetForm()">
-                                    <i class="fas fa-undo me-2"></i>Reset
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Available Devices</h5>
-                </div>
-                <div class="card-body">
-                    {% if devices %}
-                    <div class="list-group">
-                        {% for device in devices %}
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">{{ device.name }}</h6>
-                                <small>{{ device.host }}</small>
-                            </div>
-                            <p class="mb-1">{{ device.role }}</p>
-                            <small>{{ device.device_type }}</small>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p class="text-muted">No devices available for audit</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Recent Audit Results</h5>
-                </div>
-                <div class="card-body">
-                    {% if recent_audits %}
-                    <div class="list-group">
-                        {% for audit in recent_audits %}
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">{{ audit.device_name }}</h6>
-                                <small>{{ audit.executed_at.strftime('%Y-%m-%d %H:%M') if audit.executed_at else 'Unknown' }}</small>
-                            </div>
-                            <p class="mb-1">{{ audit.summary }}</p>
-                            <span class="badge bg-{% if audit.status == 'success' %}success{% elif audit.status == 'error' %}danger{% else %}warning{% endif %}">
-                                {{ audit.status }}
-                            </span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p class="text-muted">No recent audit results</p>
-                    {% endif %}
-                </div>
+    <div id="results-container" class="mt-5" style="display: none;">
+        <h2 class="mb-3">Validation Results</h2>
+        <div class="card">
+            <div class="card-body">
+                <pre id="results-output" class="p-3 bg-light rounded"><code></code></pre>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+{{ super() }}
 <script>
-function startAudit() {
-    const form = document.getElementById('auditForm');
-    const deviceSelect = document.getElementById('deviceSelect');
-    
-    if (!deviceSelect.value) {
-        alert('Please select a device to audit');
-        return;
-    }
-    
-    alert('Network audit functionality coming soon!');
-}
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('audit-form');
+    const uploadInput = document.getElementById('config-upload');
+    const textInput = document.getElementById('config-text');
+    const resultsContainer = document.getElementById('results-container');
+    const resultsOutput = document.getElementById('results-output').querySelector('code');
+    const spinner = document.getElementById('spinner');
+    const submitButton = form.querySelector('button[type="submit"]');
 
-function resetForm() {
-    document.getElementById('auditForm').reset();
-}
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const deviceType = document.getElementById('device-type').value;
+        let configContent = textInput.value;
 
-// Handle form submission
-document.getElementById('auditForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    startAudit();
+        if (uploadInput.files.length > 0) {
+            const file = uploadInput.files[0];
+            configContent = await file.text();
+        }
+
+        if (!configContent.trim()) {
+            alert('Please upload a file or paste a configuration.');
+            return;
+        }
+
+        submitButton.disabled = true;
+        spinner.classList.remove('d-none');
+        resultsContainer.style.display = 'none';
+
+        try {
+            const response = await fetch('/api/audit/validate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    device_type: deviceType,
+                    config_content: configContent
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            resultsOutput.textContent = JSON.stringify(result, null, 2);
+            resultsContainer.style.display = 'block';
+
+        } catch (error) {
+            console.error('Validation error:', error);
+            resultsOutput.textContent = `An error occurred: ${error.message}`;
+            resultsContainer.style.display = 'block';
+        } finally {
+            submitButton.disabled = false;
+            spinner.classList.add('d-none');
+        }
+    });
 });
 </script>
 {% endblock %} 

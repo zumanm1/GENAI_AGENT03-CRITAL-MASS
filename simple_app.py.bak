@@ -1,0 +1,850 @@
+#!/usr/bin/env python3
+"""
+Simplified Flask Application for Network Automation AI Agent
+This version uses minimal dependencies to ensure compatibility
+"""
+
+import os
+import sys
+import logging
+from logging.handlers import RotatingFileHandler
+from functools import wraps
+import click
+import uuid
+import numpy as np
+
+from flask import (Flask, abort, flash, jsonify, redirect, render_template,
+                   request, url_for, Response, stream_with_context, session)
+from flask_cors import CORS
+from flask_login import (LoginManager, UserMixin, current_user, login_required,
+                         login_user, logout_user, AnonymousUserMixin)
+from sqlalchemy.orm import joinedload
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from src.core.database import db_manager
+from src.core.models import User, Role, NetworkDevice, NetworkLink, ChatMessage, AuditResult, Document, user_roles
+from src.core.ollama_service import ollama_service
+from src.core.chromadb_service import chromadb_service
+from src.web.decorators import role_required, roles_required
+from src.network.config_validator import validate_config
+from src.network.topology import get_topology
+from src.rag.web_scraper import scrape_and_ingest
+from src.plugins.plugin_loader import plugin_manager, load_plugins
+
+# MONKEY PATCH: chromadb==0.5.10 is not compatible with numpy>=1.26.0
+# as it uses a deprecated np.float_ alias. We restore it here.
+# See: https://github.com/numpy/numpy/pull/23582
+if not hasattr(np, "float_"):
+    np.float_ = np.float64
+
+# ==============================================================================
+# Logging Setup
+# ==============================================================================
+APP_VERSION = "v1.1"  # Add a version number
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.info(f"Running Application Version: {APP_VERSION}")
+
+# ==============================================================================
+# Application Setup
+# ==============================================================================
+# Correctly set the root path for the application so that template and static
+# folders are found regardless of the execution directory.
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__,
+            template_folder=os.path.join(APP_ROOT, 'src/web/templates'),
+            static_folder=os.path.join(APP_ROOT, 'src/web/static'))
+app.config['SECRET_KEY'] = 'dev-secret-key-change-in-production'
+CORS(app)
+
+# Discover and load plugins
+load_plugins(app)
+
+# ==============================================================================
+# Database & Authentication Setup
+# ==============================================================================
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# ------------------------------------------------------------------------------
+# Anonymous User Handling
+# ------------------------------------------------------------------------------
+# Provide a custom anonymous user so template code that calls `current_user.has_role`
+# does not raise an AttributeError when the visitor is not authenticated.
+
+
+class AnonymousUser(AnonymousUserMixin):
+    """Custom anonymous user that safely handles role/permission checks."""
+
+    def __init__(self):
+        # Ensure the object has a `roles` attribute so list iterations work.
+        self.roles: list = []
+
+    def has_role(self, role_name: str) -> bool:  # noqa: D401
+        """Anonymous users never have any roles."""
+        return False
+
+
+# Tell Flask-Login to use our safer anonymous implementation.
+login_manager.anonymous_user = AnonymousUser
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Loads a user from the database for Flask-Login."""
+    if db_manager:
+        try:
+            # Eagerly load roles to prevent DetachedInstanceError
+            with db_manager.get_session() as session:
+                user = (
+                    session.query(User)
+                    .options(joinedload(User.roles))
+                    .filter(User.id == int(user_id))
+                    .first()
+                )
+                if user:
+                    # The user object is returned to Flask-Login, which manages the session.
+                    # No need to expunge here; detaching it causes issues with related objects.
+                    return user
+                return None
+        except Exception as e:
+            logger.error(f"Error loading user {user_id}: {e}", exc_info=True)
+            return None
+    return None
+
+def init_admin_user():
+    """Creates a default admin user and roles if they don't exist."""
+    if not db_manager:
+        logger.warning("Database manager not available. Skipping admin user and role creation.")
+        return
+    with app.app_context():
+        try:
+            with db_manager.get_session() as session:
+                # Create roles if they don't exist
+                role_names = ['Admin', 'Operator', 'Viewer']
+                for role_name in role_names:
+                    if not session.query(Role).filter_by(name=role_name).first():
+                        session.add(Role(name=role_name))
+                
+                # Ensure at least one admin user exists and has the Admin role
+                admin_role = session.query(Role).filter_by(name='Admin').first()
+
+                # Create admin user if DB is empty
+                if session.query(User).count() == 0:
+                    logger.info("No users found. Creating default admin user.")
+                    admin_user = User(username='admin', email='admin@example.com')
+                    admin_user.set_password('admin')
+                    if admin_role:
+                        admin_user.roles.append(admin_role)
+                    session.add(admin_user)
+                else:
+                    # Make sure existing admin user actually has Admin role
+                    admin_user = session.query(User).filter_by(username='admin').first()
+                    if admin_user and admin_role and admin_role not in admin_user.roles:
+                        logger.info("Ensuring existing admin user has Admin role.")
+                        admin_user.roles.append(admin_role)
+                
+                session.commit()
+            logger.info("Default roles created and admin user checked/created.")
+        except Exception as e:
+            logger.error(f"Could not create admin user or roles: {e}", exc_info=True)
+
+def seed_network_topology():
+    """Seed the database with mock network devices and links."""
+    with db_manager.get_session() as session:
+        # Check if data already exists
+        if session.query(NetworkDevice).count() == 0:
+            logger.info("Seeding network topology data...")
+            # Create devices
+            r1 = NetworkDevice(name='Core-Router-1', ip_address='10.0.0.1', device_type='router')
+            r2 = NetworkDevice(name='Edge-Router-1', ip_address='10.1.0.1', device_type='router')
+            s1 = NetworkDevice(name='Access-Switch-1', ip_address='10.1.1.1', device_type='switch')
+            s2 = NetworkDevice(name='Access-Switch-2', ip_address='10.1.1.2', device_type='switch')
+            fw1 = NetworkDevice(name='Firewall-1', ip_address='192.168.1.1', device_type='firewall')
+
+            session.add_all([r1, r2, s1, s2, fw1])
+            session.commit() # Commit to get IDs
+
+            # Create links
+            link1 = NetworkLink(source_device_id=r1.id, target_device_id=r2.id)
+            link2 = NetworkLink(source_device_id=r2.id, target_device_id=s1.id)
+            link3 = NetworkLink(source_device_id=r2.id, target_device_id=s2.id)
+            link4 = NetworkLink(source_device_id=r1.id, target_device_id=fw1.id)
+            
+            session.add_all([link1, link2, link3, link4])
+            session.commit()
+            logger.info("Network topology data seeded.")
+        else:
+            logger.info("Network topology data already exists. Skipping seed.")
+
+@app.cli.command("init-db")
+def init_db_command():
+    """Initializes the database and seeds it with default data."""
+    click.echo("Initializing database...")
+    init_admin_user()
+    seed_network_topology()
+    click.echo("Initialized the database.")
+
+# ==============================================================================
+# In-Memory Data Stores
+# ==============================================================================
+# In-memory storage for uploaded file contexts for the RAG pipeline.
+# In a real-world application, this would be replaced with a more persistent
+# and scalable solution like a Redis cache, a database, or a dedicated
+# vector store. The session_id from the client is used as the key.
+uploaded_file_contexts = {}
+
+# Mock data for demonstration purposes. This provides sample data for the
+# UI without requiring a database connection, making the application
+# self-contained and easy to run.
+MOCK_DEVICES = [
+    {"id": 1, "name": "R15", "ip": "172.16.39.115", "type": "PE Router", "status": "online"},
+    {"id": 2, "name": "R16", "ip": "172.16.39.116", "type": "PE Router", "status": "online"},
+    {"id": 3, "name": "R17", "ip": "172.16.39.117", "type": "P Router", "status": "offline"},
+    {"id": 4, "name": "R18", "ip": "172.16.39.118", "type": "RR Router", "status": "online"},
+    {"id": 5, "name": "R19", "ip": "172.16.39.119", "type": "CE Router", "status": "online"},
+    {"id": 6, "name": "R20", "ip": "172.16.39.120", "type": "CE Router", "status": "offline"},
+]
+
+MOCK_STATS = {
+    "total_devices": 6,
+    "online_devices": 4,
+    "offline_devices": 2,
+    "total_documents": 3,
+    "last_audit": "2024-01-15 10:30:00"
+}
+
+# ==============================================================================
+# Frontend Rendering Routes
+# ==============================================================================
+
+@app.route('/')
+@login_required
+def index():
+    """
+    Renders the main dashboard page.
+
+    This is the primary landing page of the application, displaying key
+    statistics and a summary of network devices.
+
+    Returns:
+        Rendered HTML template for the dashboard.
+    """
+    return render_template('dashboard.html', 
+                         stats=MOCK_STATS,
+                         devices=MOCK_DEVICES)
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    """
+    Renders the dashboard page. Serves as an alternative route to index().
+
+    Returns:
+        Rendered HTML template for the dashboard.
+    """
+    return index()
+
+@app.route('/devices')
+@login_required
+@roles_required('Admin', 'Operator')
+def devices():
+    """
+    Renders the device management page.
+
+    Displays a list of all mock network devices and their current status.
+
+    Returns:
+        Rendered HTML template for the device list.
+    """
+    return render_template('devices.html', devices=MOCK_DEVICES)
+
+@app.route('/chat')
+@login_required
+@roles_required('Admin', 'Operator')
+def chat():
+    """
+    Renders the main chat interface page.
+
+    Generates a unique session ID for the user to ensure that their
+    file uploads for RAG are isolated from other users.
+
+    Returns:
+        Rendered HTML template for the chat page, with a unique session_id.
+    """
+    session_id = str(uuid.uuid4())
+    logger.info(f"New chat session for user {current_user.username} created with ID: {session_id}")
+    
+    # Retrieve chat history
+    history = []
+    if db_manager:
+        try:
+            with db_manager.get_session() as dbsession:
+                history = dbsession.query(ChatMessage).filter_by(session_id=session_id).order_by(ChatMessage.timestamp).all()
+        except Exception as e:
+            logger.error(f"Could not retrieve chat history for session {session_id}: {e}", exc_info=True)
+
+    return render_template('chat.html', session_id=session_id, history=history)
+
+@app.route('/documents')
+@login_required
+@roles_required('Admin', 'Operator', 'Viewer')
+def documents():
+    """
+    Renders the document management page.
+
+    Displays a list of all uploaded documents from the database.
+
+    Returns:
+        Rendered HTML template for the document list.
+    """
+    docs = []
+    if db_manager:
+        try:
+            with db_manager.get_session() as session:
+                docs = session.query(Document).all()
+        except Exception as e:
+            logger.error(f"Could not retrieve documents: {e}", exc_info=True)
+            flash("Error retrieving documents.", "danger")
+    return render_template('documents.html', documents=docs)
+
+@app.route('/audit')
+@login_required
+@roles_required('Admin', 'Operator')
+def audit():
+    """Renders the network audit page."""
+    return render_template('audit.html')
+
+@app.route('/settings')
+@login_required
+@role_required('Admin')
+def settings():
+    """
+    Renders the settings page.
+
+    Allows administrators to view and manage application settings.
+
+    Returns:
+        Rendered HTML template for the settings page.
+    """
+    models = []
+    if ollama_service.check_connection()[0]:
+        models = ollama_service.get_available_models()
+    
+    return render_template('settings.html', models=models, current_model=ollama_service.get_current_model())
+
+@app.route('/admin')
+@login_required
+@role_required('Admin')
+def admin():
+    """Renders the administration page."""
+    users = []
+    roles = []
+    if db_manager:
+        with db_manager.get_session() as session:
+            users = session.query(User).all()
+            roles = session.query(Role).all()
+    return render_template('admin.html', users=users, roles=roles)
+
+@app.route('/rag-management')
+@login_required
+@role_required('Admin')
+def rag_management():
+    """Renders the RAG management page."""
+    return render_template('rag_management.html')
+
+@app.route('/plugin-management')
+@login_required
+@role_required('Admin')
+def plugin_management():
+    """Renders the plugin management page."""
+    return render_template('plugin_management.html', plugins=plugin_manager.get_plugins())
+
+@app.route('/admin/assign_role', methods=['POST'])
+@login_required
+@role_required('Admin')
+def assign_role():
+    """Assigns a role to a user."""
+    user_id = request.form.get('user_id')
+    role_id = request.form.get('role_id')
+
+    if not user_id or not role_id:
+        flash('User ID and Role ID are required.', 'danger')
+        return redirect(url_for('admin'))
+
+    with db_manager.get_session() as session:
+        user = session.query(User).get(user_id)
+        role = session.query(Role).get(role_id)
+        if user and role:
+            user.roles.append(role)
+            session.commit()
+            flash(f"Role '{role.name}' assigned to user '{user.username}'.", "success")
+        else:
+            flash("User or Role not found.", "danger")
+    
+    return redirect(url_for('admin'))
+
+@app.route('/library')
+@login_required
+@roles_required('Admin', 'Operator')
+def library():
+    """
+    Renders the command library page.
+    
+    This route is now handled by the command library plugin, but we keep a
+    stub here as a fallback in case the plugin is disabled.
+    """
+    # In a real app, you might check if the blueprint is registered
+    # and only render a fallback if it's not.
+    return render_template('library.html', commands=[])
+
+@app.route('/network-map')
+@login_required
+@roles_required('Admin', 'Operator')
+def network_map():
+    """Renders the network topology map page."""
+    return render_template('network_map.html')
+
+@app.route('/api/network/topology')
+@login_required
+@roles_required('Admin', 'Operator')
+def api_network_topology():
+    """Provides network topology data as JSON."""
+    if not db_manager:
+        return jsonify({"error": "Database not available"}), 500
+    try:
+        nodes, links = get_topology(db_manager)
+        return jsonify({"nodes": nodes, "links": links})
+    except Exception as e:
+        logger.error(f"Could not retrieve network topology: {e}", exc_info=True)
+        return jsonify({"error": "Could not retrieve topology"}), 500
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Handles user login.
+
+    Development/testing convenience:
+    • A plain GET request automatically logs the visitor in as the default
+      ``admin`` user (password ``admin``).  The required user and roles are
+      created transparently if they do not yet exist.
+    """
+
+    # ------------------------------------------------------------------
+    # Automatic login path (GET)
+    # ------------------------------------------------------------------
+    if request.method == 'GET':
+        # Already authenticated?  Send them straight to the dashboard.
+        if current_user.is_authenticated:
+            return redirect(url_for('dashboard'))
+
+        admin_user = None
+        if db_manager:
+            # Ensure the default admin user exists (create if missing)
+            admin_user = db_manager.get_user_by_username('admin')
+            if not admin_user:
+                try:
+                    with db_manager.get_session() as session:
+                        # Guarantee the Admin role exists
+                        admin_role = session.query(Role).filter_by(name='Admin').first()
+                        if not admin_role:
+                            admin_role = Role(name='Admin')
+                            session.add(admin_role)
+
+                        admin_user = User(username='admin', email='admin@example.com')
+                        admin_user.set_password('admin')
+                        admin_user.roles.append(admin_role)
+                        session.add(admin_user)
+                        session.commit()
+                        session.refresh(admin_user)
+                        session.expunge(admin_user)
+                except Exception as e:
+                    logger.error(f"Automatic admin user creation failed: {e}", exc_info=True)
+                    admin_user = None
+
+        if admin_user:
+            login_user(admin_user)
+            flash('Automatically logged in as admin.', 'info')
+            return redirect(url_for('dashboard'))
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = None
+        if db_manager:
+            user = db_manager.get_user_by_username(username)
+        
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect(url_for('dashboard'))
+        
+        flash('Invalid username or password', 'danger')
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """Handles new user registration."""
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form.get('email') # Make email optional for now
+
+        if not db_manager:
+            flash('Registration is currently disabled.', 'danger')
+            return redirect(url_for('register'))
+        
+        with db_manager.get_session() as session:
+            # Basic validation
+            if session.query(User).filter_by(username=username).first():
+                flash('Username already exists.', 'danger')
+                return redirect(url_for('register'))
+
+            new_user = User(username=username, email=email)
+            new_user.set_password(password)
+
+            try:
+                # Assign default 'Viewer' role
+                viewer_role = session.query(Role).filter_by(name='Viewer').first()
+                if viewer_role:
+                    new_user.roles.append(viewer_role)
+
+                session.add(new_user)
+                session.commit()
+                flash('Registration successful! Please log in.', 'success')
+                return redirect(url_for('login'))
+            except Exception as e:
+                session.rollback()
+                logger.error(f"Error during registration: {e}", exc_info=True)
+                flash('An error occurred during registration. Please try again.', 'danger')
+                return redirect(url_for('register'))
+
+    return render_template('register.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    """Handles user logout."""
+    logout_user()
+    return redirect(url_for('login'))
+
+
+# ==============================================================================
+# API Endpoints
+# ==============================================================================
+@app.route('/api/health')
+def health_check():
+    """
+    Provides a basic health check of the application.
+
+    Returns:
+        JSON response indicating the status of the application.
+    """
+    db_status = "disconnected"
+    if db_manager:
+        try:
+            with db_manager.get_session() as session:
+                session.execute(text("SELECT 1"))
+            db_status = "connected"
+        except Exception as e:
+            logger.error(f"Health check could not connect to database: {e}")
+
+    health_status = {
+        "status": "ok",
+        "version": APP_VERSION,
+        "database": db_status,
+        "ollama": "connected" if ollama_service.check_connection() else "disconnected"
+    }
+    return jsonify(health_status)
+
+@app.route('/api/stats')
+def get_stats():
+    """
+    Returns mock statistics for the dashboard.
+    In a real application, this would query a database or monitoring system.
+    """
+    return jsonify(MOCK_STATS)
+
+@app.route('/api/devices', methods=['GET'])
+def api_get_devices():
+    """
+    Returns a list of mock devices.
+    In a real application, this would fetch data from a database.
+    """
+    return jsonify(MOCK_DEVICES)
+
+def is_command_request(message):
+    """
+    Simple keyword-based check to see if a message is a request for a command.
+    """
+    keywords = ['show', 'config', 'interface', 'ip', 'route', 'bgp', 'ospf']
+    return any(keyword in message.lower() for keyword in keywords)
+
+@app.route('/api/chat/message', methods=['GET', 'POST'])
+def api_chat_message():
+    """
+    Handles incoming chat messages, interacts with the Ollama service,
+    and returns a streaming response.
+    """
+    if request.method == 'POST':
+        try:
+            data = request.json
+            message = data.get('message')
+            session_id = data.get('session_id')
+
+            if not message or not session_id:
+                return jsonify({"error": "Message and session_id are required"}), 400
+
+            # Save user message to DB
+            with db_manager.get_session() as dbsession:
+                user_message = ChatMessage(session_id=session_id, sender='user', message=message)
+                dbsession.add(user_message)
+                dbsession.commit()
+
+            # RAG - Retrieve context from uploaded files if available
+            context = uploaded_file_contexts.get(session_id, "")
+            if context:
+                logger.info(f"Using context from session {session_id} for RAG.")
+            
+            # Determine if this is a request for a command
+            system_prompt_key = 'natural_language_to_command' if is_command_request(message) else 'default'
+
+            # Start streaming response from Ollama
+            def generate():
+                full_response = ""
+                for chunk in ollama_service.stream_chat(message, context, system_prompt_key):
+                    full_response += chunk
+                    yield chunk
+
+                # Save AI response to DB after stream is complete
+                with db_manager.get_session() as dbsession:
+                    ai_message = ChatMessage(session_id=session_id, sender='ai', message=full_response)
+                    dbsession.add(ai_message)
+                    dbsession.commit()
+
+            return Response(stream_with_context(generate()), mimetype='text/event-stream')
+        except Exception as e:
+            logger.error(f"Error streaming chat: {e}", exc_info=True)
+            return jsonify({"error": "Failed to get response from AI service"}), 500
+
+    # This part handles GET requests, if needed for other purposes.
+    return jsonify({"error": "POST method required to send a message"}), 405
+
+
+@app.route('/api/ollama/status')
+def api_ollama_status():
+    """
+    Checks the connection status of the Ollama service.
+
+    Returns:
+        JSON response indicating if Ollama is running and the version.
+    """
+    try:
+        is_running, version = ollama_service.check_connection()
+        if is_running:
+            return jsonify({
+                "status": "running",
+                "version": version
+            })
+        else:
+            return jsonify({
+                "status": "not_running",
+                "version": None
+            }), 503
+    except Exception as e:
+        logger.error(f"Could not get Ollama status: {e}", exc_info=True)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/ollama/models', methods=['GET'])
+def api_get_ollama_models():
+    """
+    Retrieves a list of available models from the Ollama service.
+    
+    This endpoint communicates with the Ollama service to fetch a list of
+    all downloaded and available models that can be used for chat.
+    
+    Returns:
+        A JSON list of model names, or an error if the service is unavailable.
+    """
+    if not ollama_service.check_connection()[0]:
+        return jsonify({"error": "Ollama service is not running"}), 503
+    try:
+        models = ollama_service.get_available_models()
+        return jsonify(models)
+    except Exception as e:
+        logger.error(f"Could not retrieve Ollama models: {e}", exc_info=True)
+        return jsonify({"error": "Failed to retrieve models from Ollama"}), 500
+
+@app.route('/api/chat/upload', methods=['POST'])
+@login_required
+@roles_required('Admin', 'Operator')
+def api_chat_upload():
+    """
+    Handles file uploads for the RAG pipeline.
+
+    The uploaded file is temporarily stored in memory, and its content is
+    extracted and added to the `uploaded_file_contexts` dictionary, keyed
+    by the user's session ID.
+
+    Returns:
+        A JSON response indicating success or failure.
+    """
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    
+    session_id = request.form.get('session_id')
+    if not session_id:
+        return jsonify({"error": "Session ID is required"}), 400
+
+    if file:
+        try:
+            # Read file content directly into memory
+            # For larger files, consider streaming or saving to a temporary file
+            content = file.read().decode('utf-8', errors='ignore')
+            
+            # Store context in our in-memory dictionary
+            uploaded_file_contexts[session_id] = content
+            
+            logger.info(f"File '{file.filename}' uploaded successfully for session {session_id}.")
+            return jsonify({
+                "message": f"File '{file.filename}' uploaded and context stored for this session.",
+                "filename": file.filename
+            })
+        except Exception as e:
+            logger.error(f"Error processing uploaded file: {e}", exc_info=True)
+            return jsonify({"error": "Failed to process uploaded file"}), 500
+
+@app.route('/api/ollama/model', methods=['POST'])
+def api_select_ollama_model():
+    """
+    Allows the user to select the Ollama model to be used for chat.
+    
+    This endpoint expects a JSON payload with a 'model' key. The selected
+    model name is then passed to the Ollama service.
+    
+    Returns:
+        A JSON response confirming the model change or an error.
+    """
+    data = request.json
+    model_name = data.get('model')
+    if not model_name:
+        return jsonify({"error": "Model name is required"}), 400
+
+    try:
+        ollama_service.set_model(model_name)
+        logger.info(f"Ollama model changed to: {model_name}")
+        return jsonify({"message": f"Model successfully changed to {model_name}"})
+    except Exception as e:
+        logger.error(f"Failed to set Ollama model: {e}", exc_info=True)
+        return jsonify({"error": f"Failed to set model to {model_name}"}), 500
+
+@app.route('/api/network/discover', methods=['POST'])
+@login_required
+@role_required('Admin')
+def api_network_discover():
+    """Placeholder for network discovery."""
+    return jsonify({"message": "Network discovery started."})
+
+@app.route('/api/network/audit', methods=['POST'])
+@login_required
+@role_required('Admin')
+def api_network_audit():
+    """Placeholder for network audit."""
+    return jsonify({"message": "Network audit completed."})
+
+@app.route('/api/chat/history/<session_id>', methods=['GET'])
+def api_chat_history(session_id):
+    """
+    Retrieves the chat history for a given session ID.
+    
+    This allows the frontend to poll for chat history or load it when a
+    chat session is resumed.
+    
+    Args:
+        session_id: The unique identifier for the chat session.
+        
+    Returns:
+        A JSON list of chat messages or an error.
+    """
+    if not db_manager:
+        return jsonify({"error": "Database not available"}), 500
+    
+    try:
+        with db_manager.get_session() as dbsession:
+            messages = dbsession.query(ChatMessage).filter_by(session_id=session_id).order_by(ChatMessage.timestamp).all()
+            history = [{"sender": msg.sender, "message": msg.message, "timestamp": msg.timestamp.isoformat()} for msg in messages]
+            return jsonify(history)
+    except Exception as e:
+        logger.error(f"Could not retrieve chat history for session {session_id}: {e}", exc_info=True)
+        return jsonify({"error": "Could not retrieve chat history"}), 500
+
+@app.route('/api/audit/validate', methods=['POST'])
+@login_required
+def validate_configuration():
+    """Validates a given network configuration."""
+    data = request.json
+    config_text = data.get('config_text')
+    if not config_text:
+        return jsonify({"error": "Configuration text is required."}), 400
+    
+    results = validate_config(config_text)
+    return jsonify(results)
+
+@app.route('/api/rag/scrape', methods=['POST'])
+@login_required
+@role_required('Admin')
+def api_rag_scrape():
+    """Scrapes a URL and ingests its content into the RAG pipeline."""
+    data = request.json
+    url = data.get('url')
+    if not url:
+        return jsonify({"error": "URL is required."}), 400
+    
+    try:
+        success, message = scrape_and_ingest(url)
+        if success:
+            return jsonify({"message": message})
+        else:
+            return jsonify({"error": message}), 500
+    except Exception as e:
+        logger.error(f"Error during scraping/ingestion: {e}", exc_info=True)
+        return jsonify({"error": "Failed to scrape or ingest content."}), 500
+    
+@app.errorhandler(404)
+def not_found(error):
+    """
+    Handles 404 Not Found errors.
+    
+    Returns a JSON response, which is more suitable for an API-driven
+    application than a default HTML 404 page.
+    """
+    return jsonify({
+        "error": "Not Found",
+        "message": "The requested URL was not found on the server."
+    }), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    """
+    Handles 500 Internal Server Errors.
+    
+    Logs the full exception and returns a generic JSON error message
+    to the client, avoiding exposure of internal details.
+    """
+    logger.error(f"Internal Server Error: {error}", exc_info=True)
+    return jsonify({
+        "error": "Internal Server Error",
+        "message": "An unexpected error occurred on the server."
+    }), 500
+
+
+if __name__ == '__main__':
+    # The 'init-db' command must be run separately from the command line
+    # For example: flask --app simple_app init-db
+    app.run(debug=True, host='0.0.0.0', port=5003) 

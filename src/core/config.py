@@ -3,17 +3,36 @@ Core Configuration Manager
 Centralized configuration management for the Network Automation AI Agent
 """
 
-import os
-import sys
 import logging
 from pathlib import Path
 from typing import Dict, Any
 
-from config.app_config import *
+from config.app_config import (
+    FLASK_CONFIG,
+    OLLAMA_CONFIG,
+    CHROMADB_CONFIG,
+    NETWORK_CONFIG,
+    RAG_CONFIG,
+    CREWAI_CONFIG,
+    LOGGING_CONFIG,
+    UPLOAD_CONFIG,
+    DATABASE_CONFIG,
+    SECURITY_CONFIG,
+    API_CONFIG,
+    AGENT_CONFIG,
+    DEV_CONFIG,
+    BASE_DIR,
+    SRC_DIR,
+    DATA_DIR,
+    LOGS_DIR,
+    DB_DIR,
+    DOCUMENTS_DIR,
+)
+
 
 class AppConfig:
     """Centralized application configuration manager"""
-    
+
     def __init__(self):
         self.flask = FLASK_CONFIG
         self.ollama = OLLAMA_CONFIG
@@ -28,7 +47,7 @@ class AppConfig:
         self.api = API_CONFIG
         self.agents = AGENT_CONFIG
         self.dev = DEV_CONFIG
-        
+
         # Directory paths
         self.base_dir = BASE_DIR
         self.src_dir = SRC_DIR
@@ -36,10 +55,10 @@ class AppConfig:
         self.logs_dir = LOGS_DIR
         self.db_dir = DB_DIR
         self.documents_dir = DOCUMENTS_DIR
-        
+
         # Initialize logging
         self._setup_logging()
-        
+
     def _setup_logging(self):
         """Setup application logging"""
         try:
@@ -48,7 +67,7 @@ class AppConfig:
                 format=self.logging["FORMATTERS"]["default"]["FORMAT"],
                 datefmt=self.logging["FORMATTERS"]["default"]["DATEFMT"]
             )
-            
+
             # Create file handler
             file_handler = logging.FileHandler(
                 self.logging["HANDLERS"]["file"]["FILENAME"]
@@ -59,16 +78,16 @@ class AppConfig:
                 self.logging["FORMATTERS"]["detailed"]["DATEFMT"]
             )
             file_handler.setFormatter(file_formatter)
-            
+
             # Add to root logger
             root_logger = logging.getLogger()
             root_logger.addHandler(file_handler)
-            
+
             logging.info("Logging initialized successfully")
-            
+
         except Exception as e:
             print(f"Error setting up logging: {e}")
-    
+
     def get_network_devices(self) -> Dict[str, Dict[str, Any]]:
         """Get predefined network device configurations"""
         return {
@@ -82,7 +101,7 @@ class AppConfig:
                 "as_number": 2222,
             },
             "R16": {
-                "host": "172.16.39.116", 
+                "host": "172.16.39.116",
                 "device_type": "cisco_ios",
                 "username": self.network["SSH_USERNAME"],
                 "password": self.network["SSH_PASSWORD"],
@@ -92,7 +111,7 @@ class AppConfig:
             },
             "R17": {
                 "host": "172.16.39.117",
-                "device_type": "cisco_ios", 
+                "device_type": "cisco_ios",
                 "username": self.network["SSH_USERNAME"],
                 "password": self.network["SSH_PASSWORD"],
                 "secret": self.network["ENABLE_PASSWORD"],
@@ -105,7 +124,7 @@ class AppConfig:
                 "username": self.network["SSH_USERNAME"],
                 "password": self.network["SSH_PASSWORD"],
                 "secret": self.network["ENABLE_PASSWORD"],
-                "role": "RR Router", 
+                "role": "RR Router",
                 "as_number": 2222,
             },
             "R19": {
@@ -127,7 +146,7 @@ class AppConfig:
                 "as_number": 13,
             },
         }
-    
+
     def get_ip_range(self) -> list:
         """Parse IP range and return list of IP addresses"""
         range_str = self.network["IP_RANGE"]
@@ -137,31 +156,31 @@ class AppConfig:
             end_num = int(end_ip)
             start_num = int(start_parts[-1])
             base_ip = ".".join(start_parts[:-1])
-            
+
             return [f"{base_ip}.{i}" for i in range(start_num, end_num + 1)]
         else:
             return [range_str]
-    
+
     def is_development(self) -> bool:
         """Check if running in development mode"""
         return self.flask["DEBUG"] or self.dev["AUTO_RELOAD"]
-    
+
     def is_testing(self) -> bool:
         """Check if running in testing mode"""
         return self.dev["TESTING"]
-    
+
     def should_mock_devices(self) -> bool:
         """Check if should use mock devices"""
         return self.dev["MOCK_DEVICES"]
-    
+
     def get_allowed_file_extensions(self) -> set:
         """Get allowed file extensions for uploads"""
         return self.upload["ALLOWED_EXTENSIONS"]
-    
+
     def get_max_file_size(self) -> int:
         """Get maximum file size for uploads"""
         return self.upload["MAX_FILE_SIZE"]
-    
+
     def validate_configuration(self) -> bool:
         """Validate configuration settings"""
         try:
@@ -172,32 +191,36 @@ class AppConfig:
                 self.db_dir,
                 self.documents_dir,
             ]
-            
+
             for directory in required_dirs:
                 if not Path(directory).exists():
-                    logging.error(f"Required directory does not exist: {directory}")
+                    logging.error(
+                        f"Required directory does not exist: {directory}")
                     return False
-            
+
             # Check Ollama configuration
             if not self.ollama["BASE_URL"]:
                 logging.error("Ollama base URL not configured")
                 return False
-                
+
             # Check network configuration
             if not self.network["SSH_USERNAME"]:
                 logging.error("SSH username not configured")
                 return False
-                
+
             logging.info("Configuration validation successful")
             return True
-            
+
         except Exception as e:
             logging.error(f"Configuration validation failed: {e}")
             return False
-    
+
     def __str__(self) -> str:
         """String representation of configuration"""
-        return f"AppConfig(debug={self.flask['DEBUG']}, mock_devices={self.dev['MOCK_DEVICES']})"
+        return (
+            f"AppConfig(debug={self.flask['DEBUG']}, "
+            f"mock_devices={self.dev['MOCK_DEVICES']})"
+        )
 
 
 # Global configuration instance
@@ -205,4 +228,6 @@ config = AppConfig()
 
 # Validate configuration on import
 if not config.validate_configuration():
-    logging.error("Configuration validation failed - some features may not work correctly") 
+    logging.error(
+        "Configuration validation failed - some features may not work correctly"
+    )

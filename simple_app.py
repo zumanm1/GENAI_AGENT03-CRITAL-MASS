@@ -7,7 +7,9 @@ This version uses minimal dependencies to ensure compatibility
 import os
 import sys
 import logging
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 from datetime import datetime, timezone
 import json
@@ -29,102 +31,67 @@ app.config['SECRET_KEY'] = 'dev-secret-key-change-in-production'
 CORS(app)
 
 # ==============================================================================
-# In-Memory Data Stores
+# Core Application Imports
 # ==============================================================================
-# In-memory storage for uploaded file contexts for the RAG pipeline.
+# Ensure the src directory is in the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
+
+from core.database import DatabaseManager
+from core.models import User, Role
+# ==============================================================================
+# Database and Authentication Setup
+# ==============================================================================
+db_manager = DatabaseManager()
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db_manager.get_user(user_id=int(user_id))
 # In a real-world application, this would be replaced with a more persistent
 # and scalable solution like a Redis cache, a database, or a dedicated
 # vector store. The session_id from the client is used as the key.
-uploaded_file_contexts = {}
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_manager.session.remove()
 
-# Mock data for demonstration purposes. This provides sample data for the
-# UI without requiring a database connection, making the application
-# self-contained and easy to run.
-MOCK_DEVICES = [
-    {"id": 1, "name": "R15", "ip": "172.16.39.115", "type": "PE Router", "status": "online"},
-    {"id": 2, "name": "R16", "ip": "172.16.39.116", "type": "PE Router", "status": "online"},
-    {"id": 3, "name": "R17", "ip": "172.16.39.117", "type": "P Router", "status": "offline"},
-    {"id": 4, "name": "R18", "ip": "172.16.39.118", "type": "RR Router", "status": "online"},
-    {"id": 5, "name": "R19", "ip": "172.16.39.119", "type": "CE Router", "status": "online"},
-    {"id": 6, "name": "R20", "ip": "172.16.39.120", "type": "CE Router", "status": "offline"},
-]
-
-MOCK_STATS = {
-    "total_devices": 6,
-    "online_devices": 4,
-    "offline_devices": 2,
-    "total_documents": 3,
-    "last_audit": "2024-01-15 10:30:00"
-}
-
-# Path to SQLite database for chat history
-DB_PATH = os.path.join(os.path.dirname(__file__), 'chat_history.db')
-
-def init_db():
-    """Initializes the SQLite database with a messages table."""
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_id TEXT,
-            role TEXT,
-            content TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    )
-    conn.commit()
-    conn.close()
-
-init_db()
-
-
-def save_message(session_id: str, role: str, content: str):
-    """Persists a chat message to the database."""
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
-        (session_id, role, content)
-    )
-    conn.commit()
-    conn.close()
-
-
-def get_history(session_id: str):
-    """Retrieves the full chat history for a session ID."""
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute(
-        "SELECT role, content, timestamp FROM messages WHERE session_id = ? ORDER BY id ASC",
-        (session_id,)
-    )
-    rows = cur.fetchall()
-    conn.close()
-    return [
-        {"role": role, "content": content, "timestamp": ts} for role, content, ts in rows
-    ]
 
 # ==============================================================================
 # Frontend Rendering Routes
 # ==============================================================================
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = db_manager.get_user(username=username)
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html', error='Invalid credentials')
+    return render_template('login.html')
+
 @app.route('/')
+@login_required
 def index():
-    """
-    Renders the main dashboard page.
+    stats = {
+        "total_devices": db_manager.get_device_count(),
+        "online_devices": db_manager.get_device_count(status='online'),
+        "offline_devices": db_manager.get_device_count(status='offline'),
+        "total_documents": db_manager.get_document_count(),
+        "last_audit": db_manager.get_last_audit_timestamp()
+    }
+    devices = db_manager.get_all_devices()
+    return render_template('dashboard.html', stats=stats, devices=devices)
 
-    This is the primary landing page of the application, displaying key
-    statistics and a summary of network devices.
-
-    Returns:
-        Rendered HTML template for the dashboard.
-    """
-    return render_template('dashboard.html', 
-                         stats=MOCK_STATS,
-                         devices=MOCK_DEVICES)
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route('/dashboard')
 def dashboard():
@@ -146,7 +113,8 @@ def devices():
     Returns:
         Rendered HTML template for the device list.
     """
-    return render_template('devices.html', devices=MOCK_DEVICES)
+    devices = db_manager.get_all_devices()
+    return render_template('devices.html', devices=devices)
 
 @app.route('/chat')
 def chat():
