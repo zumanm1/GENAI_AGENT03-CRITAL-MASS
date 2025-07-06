@@ -79,6 +79,12 @@ def devices():
         return render_template('error.html', error=str(e)), 500
 
 
+@app.route('/config-retrieve')
+def config_retrieve():
+    """Configuration retrieve placeholder page"""
+    return render_template('config_retrieve.html')
+
+
 @app.route('/config-push')
 def config_push():
     """Configuration push placeholder page"""

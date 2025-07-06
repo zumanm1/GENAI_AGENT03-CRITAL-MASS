@@ -56,6 +56,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'config_retrieve' %}active{% endif %}"
+                           href="{{ url_for('config_retrieve') }}">
+                            <i class="fas fa-download me-1"></i>Config&nbsp;Retrieve
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'config_push' %}active{% endif %}"
                            href="{{ url_for('config_push') }}">
                             <i class="fas fa-upload me-1"></i>Config&nbsp;Push
