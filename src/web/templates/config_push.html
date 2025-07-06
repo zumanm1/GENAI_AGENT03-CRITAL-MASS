@@ -11,11 +11,31 @@
                     <h4 class="mb-0"><i class="fas fa-upload me-2"></i>Configuration Push</h4>
                 </div>
                 <div class="card-body">
-                    <p class="lead">This section will allow you to generate and deploy configuration snippets to your network devices.</p>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Feature coming soon. Stay tuned!
-                    </div>
+                    <p class="lead">Enter configuration lines to push. Separate commands by line.</p>
+<form method="post">
+    <div class="mb-3">
+        <label for="devices" class="form-label">Devices (comma separated, default all)</label>
+        <input type="text" class="form-control" id="devices" name="devices" placeholder="R15,R16" value="{{ request.form.devices or '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="config" class="form-label">Config Lines</label>
+        <textarea class="form-control" id="config" name="config" rows="6" placeholder="interface Loopback0\n ip address 1.1.1.1 255.255.255.255"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Method</label>
+        <select class="form-select" name="method">
+            <option value="netmiko" selected>Netmiko</option>
+            <option value="napalm">NAPALM</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success"><i class="fas fa-upload me-1"></i>Push Config</button>
+</form>
+{% if outputs %}
+<hr>
+<h5>Results</h5>
+<pre class="bg-light p-3 small">{{ outputs|tojson(indent=2) }}</pre>
+{% endif %}
+                    
                 </div>
             </div>
         </div>

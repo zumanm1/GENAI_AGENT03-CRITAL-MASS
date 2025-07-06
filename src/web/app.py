@@ -92,10 +92,21 @@ def config_retrieve():
     return render_template('config_retrieve.html', outputs=outputs)
 
 
-@app.route('/config-push')
+@app.route('/config-push', methods=['GET', 'POST'])
 def config_push():
     """Configuration push placeholder page"""
-    return render_template('config_push.html')
+    outputs = None
+    if request.method == 'POST':
+        from network.push import push_config
+        devices_raw = request.form.get('devices', '')
+        selected = [d.strip() for d in devices_raw.split(',') if d.strip()]
+        method = request.form.get('method', 'netmiko')
+        config_lines = request.form.get('config', '').splitlines()
+        config_lines = [l for l in config_lines if l.strip()]
+        from network.retrieve import LAB_DEVICES
+        host_ports = {k: v for k, v in LAB_DEVICES.items() if not selected or k in selected}
+        outputs = push_config(config_lines, host_ports=host_ports, method=method)
+    return render_template('config_push.html', outputs=outputs)
 
 
 @app.route('/documents')
