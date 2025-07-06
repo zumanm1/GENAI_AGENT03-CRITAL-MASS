@@ -8,7 +8,6 @@ extended or swapped later.
 from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
-import logging
 
 try:
     from ciscoconfparse import CiscoConfParse  # type: ignore
@@ -143,9 +142,10 @@ def _simple_keyword_validation(
     return errors, actions
 
 
-def validate_config(device_type: str, config_text: str) -> Dict[str, Any]:
-    """Validate *config_text* for *device_type* and return structured result."""
-    logger = logging.getLogger(__name__)
+def validate_config(
+    device_type: str, config_text: str
+) -> Dict[str, Any]:
+    """Validate config_text for device_type and return structured result."""
 
     if device_type == "cisco_ios":
         errors, actions = _validate_cisco_ios(config_text)
@@ -159,4 +159,8 @@ def validate_config(device_type: str, config_text: str) -> Dict[str, Any]:
         }
 
     status = "success" if not errors else "failed"
-    return {"status": status, "errors": errors, "dry_run": {"actions": actions}}
+    return {
+        "status": status,
+        "errors": errors,
+        "dry_run": {"actions": actions},
+    }

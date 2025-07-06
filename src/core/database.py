@@ -78,7 +78,8 @@ class DatabaseManager:
                 return session.query(User).filter(User.id == user_id).first()
             if username:
                 return (
-                    session.query(User).filter(User.username == username).first()
+                    session.query(User).filter(
+                        User.username == username).first()
                 )
             return None
 
@@ -87,7 +88,8 @@ class DatabaseManager:
         with self.get_session() as session:
             if status:
                 return (
-                    session.query(Device).filter(Device.status == status).count()
+                    session.query(Device).filter(
+                        Device.status == status).count()
                 )
             return session.query(Device).count()
 
@@ -184,7 +186,8 @@ class DatabaseManager:
         """Get document by ID"""
         with self.get_session() as session:
             return (
-                session.query(Document).filter(Document.id == document_id).first()
+                session.query(Document).filter(
+                    Document.id == document_id).first()
             )
 
     def get_all_documents(self) -> List[Document]:
@@ -240,7 +243,8 @@ class DatabaseManager:
         """Get audit result by ID"""
         with self.get_session() as session:
             return (
-                session.query(AuditResult).filter(AuditResult.id == audit_id).first()
+                session.query(AuditResult).filter(
+                    AuditResult.id == audit_id).first()
             )
 
     def get_audit_results_by_device(
@@ -248,7 +252,8 @@ class DatabaseManager:
     ) -> List[AuditResult]:
         """Get audit results for a device"""
         with self.get_session() as session:
-            return session.query(AuditResult).filter(AuditResult.device_name == device_name).all()
+            return session.query(AuditResult).filter(
+                AuditResult.device_name == device_name).all()
 
     def get_audit_results_by_type(self, audit_type: str) -> List[AuditResult]:
         """Get audit results by type"""
@@ -279,7 +284,9 @@ class DatabaseManager:
             session.expunge(message)
             return message
 
-    def get_chat_messages(self, session_id: str, limit: int = 50) -> List[ChatMessage]:
+    def get_chat_messages(
+        self, session_id: str, limit: int = 50
+    ) -> List[ChatMessage]:
         """Get chat messages for a session"""
         with self.get_session() as session:
             return (

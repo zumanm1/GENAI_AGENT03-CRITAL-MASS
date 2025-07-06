@@ -194,16 +194,16 @@ class OllamaService:
     def analyze_network_config(self, config_text: str) -> Dict[str, Any]:
         """Analyze network configuration using LLM"""
         system_prompt = (
-            """You are a network engineer AI assistant specializing in Cisco network
-        configurations. Analyze the provided configuration and identify:
-        1. Device type and role
-        2. Interface configurations
-        3. Routing protocols (OSPF, BGP, etc.)
-        4. Potential issues or misconfigurations
-        5. Security settings
-        6. Recommendations for improvement
-
-        Provide a structured analysis in JSON format."""
+            """You are a network engineer AI assistant specializing in Cisco "
+            "network configurations. Analyze the provided configuration and "
+            "identify:\n"
+            "        1. Device type and role\n"
+            "        2. Interface configurations\n"
+            "        3. Routing protocols (OSPF, BGP, etc.)\n"
+            "        4. Potential issues or misconfigurations\n"
+            "        5. Security settings\n"
+            "        6. Recommendations for improvement\n\n"
+            "        Provide a structured analysis in JSON format."""
         )
         prompt = f"""Please analyze this network configuration:
 
@@ -218,23 +218,25 @@ Provide a detailed analysis including any issues found and recommendations."""
             max_tokens=1500
         )
 
-    def generate_network_command(self, task_description: str, device_type: str = "cisco_ios") -> Dict[str, Any]:
+    def generate_network_command(
+        self, task_description: str, device_type: str = "cisco_ios"
+    ) -> Dict[str, Any]:
         """Generate network commands for a specific task"""
         system_prompt = (
-            f"""You are a network automation expert. Generate {device_type} commands
-        for network tasks. Always provide:
-        1. The exact commands to execute
-        2. Any prerequisites or warnings
-        3. Expected outcomes
-        4. Rollback commands if applicable
-
-        Be precise and safe - only generate commands you are confident about."""
+            f"""You are a network automation expert. Generate {device_type} "
+            f"commands for network tasks. Always provide:\n"
+            f"        1. The exact commands to execute\n"
+            f"        2. Any prerequisites or warnings\n"
+            f"        3. Expected outcomes\n"
+            f"        4. Rollback commands if applicable\n\n"
+            f"        Be precise and safe - only generate commands you are "
+            f"confident about."""
         )
 
         prompt = (
-            f"""Generate {device_type} commands for this task: {task_description}
-
-Please provide a structured format with explanations."""
+            f"""Generate {device_type} commands for this task: "
+            f"{task_description}\n\n"
+            f"Please provide a structured format with explanations."""
         )
 
         return self.generate_response(
@@ -244,17 +246,18 @@ Please provide a structured format with explanations."""
             max_tokens=800
         )
 
-    def troubleshoot_network_issue(self, issue_description: str, device_logs: str = "") -> Dict[str, Any]:
+    def troubleshoot_network_issue(
+        self, issue_description: str, device_logs: str = ""
+    ) -> Dict[str, Any]:
         """Help troubleshoot network issues"""
         system_prompt = (
-            """You are a senior network troubleshooting expert. Analyze network issues
-        and provide:
-        1. Possible root causes
-        2. Diagnostic steps to verify the issue
-        3. Resolution steps
-        4. Prevention measures
-
-        Be methodical and provide step-by-step guidance."""
+            """You are a senior network troubleshooting expert. Analyze "
+            "network issues and provide:\n"
+            "        1. Possible root causes\n"
+            "        2. Diagnostic steps to verify the issue\n"
+            "        3. Resolution steps\n"
+            "        4. Prevention measures\n\n"
+            "        Be methodical and provide step-by-step guidance."""
         )
 
         prompt = f"""Network Issue: {issue_description}
@@ -295,7 +298,10 @@ Please provide troubleshooting guidance."""
 
             # Test generation with a simple prompt
             test_result = self.generate_response(
-                prompt="Hello, please respond with \'OK\' to confirm you\'re working.",
+                prompt=(
+                    "Hello, please respond with 'OK' to confirm "
+                    "you're working."
+                ),
                 temperature=0.1,
                 max_tokens=10,
             )

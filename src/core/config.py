@@ -229,5 +229,6 @@ config = AppConfig()
 # Validate configuration on import
 if not config.validate_configuration():
     logging.error(
-        "Configuration validation failed - some features may not work correctly"
+        "Configuration validation failed - "
+        "some features may not work correctly"
     )

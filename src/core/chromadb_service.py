@@ -148,7 +148,8 @@ class ChromaDBService:
             return False
 
     def search_documents(
-        self, query: str, n_results: int = 5, filter_metadata: Dict[str, Any] = None
+        self, query: str, n_results: int = 5,
+        filter_metadata: Dict[str, Any] = None
     ) -> List[Dict[str, Any]]:
         """Search for similar documents"""
         try:

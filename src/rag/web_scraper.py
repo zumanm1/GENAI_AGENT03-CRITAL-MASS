@@ -25,12 +25,14 @@ def _extract_text(html: str) -> str:
     soup = BeautifulSoup(html, "lxml")
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
-    lines = [line.strip() for line in soup.get_text(separator="\n").splitlines()]
+    lines = [line.strip() for line in soup.get_text(
+        separator="\n").splitlines()]
     return "\n".join([line for line in lines if line])
 
 
 def scrape_and_ingest(url: str) -> Tuple[bool, str]:
-    """Fetch *url*, extract text, and add to vector DB. Returns (success, msg)."""
+    """Fetch *url*, extract text, and add to vector DB.
+    Returns (success, msg)."""
     try:
         logger.info(f"Scraping URL: {url}")
         resp = requests.get(url, timeout=10)

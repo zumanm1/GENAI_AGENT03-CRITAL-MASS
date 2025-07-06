@@ -263,16 +263,19 @@ def api_chat_message():
             history_context = ""  # Reset context on error
 
         # 3. Merge history with RAG context (if any)
-        # For now, we'll just prepend history. A more advanced RAG implementation
-        # would merge this more intelligently.
+        # For now, we'll just prepend history. A more advanced RAG
+        # implementation would merge this more intelligently.
 
         final_message = message_content
         if history_context:
-            final_message = f"{history_context}\n\n[USER] {message_content}"
+            final_message = (
+                f"{history_context}\n\n[USER] {message_content}"
+            )
 
         # 4. Pass merged context to ollama_service
         # Note: We are now using a streaming-compatible method if available
-        # For this example, we'll stick to chat_completion but with full context.
+        # For this example, we'll stick to chat_completion but with
+        # full context.
 
         system_prompt = (
             """You are a helpful network automation AI assistant. You will be
@@ -599,7 +602,8 @@ def api_rag_query():
             messages = [
                 {
                     "role": "system",
-                    "content": "You are a helpful network automation AI assistant.",
+                    "content": ("You are a helpful network automation AI "
+                                "assistant."),
                 },
                 {"role": "user", "content": query},
             ]
@@ -615,11 +619,11 @@ def api_rag_query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"""You are a helpful network automation AI assistant.
-                    Use the following context to answer questions:
+                    "content": f"""You are a helpful network automation AI
+assistant. Use the following context to answer questions:
 
-                    Context:
-                    {context}""",
+Context:
+{context}"""
                 },
                 {"role": "user", "content": query},
             ]
