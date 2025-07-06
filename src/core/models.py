@@ -239,7 +239,7 @@ class ChatMessageCreate(BaseModel):
     """Pydantic model for creating chat messages"""
     session_id: str = Field(..., min_length=1, max_length=100)
     content: str = Field(..., min_length=1)
-    message_type: str = Field("user", regex="^(user|assistant|system)$")
+    message_type: str = Field("user", pattern="^(user|assistant|system)$")
 
 
 class AuditRequest(BaseModel):

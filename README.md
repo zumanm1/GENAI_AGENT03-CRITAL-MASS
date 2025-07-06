@@ -159,6 +159,24 @@ GEN_AI-AUTOMATION/
    python src/web/app.py
    ```
 
+### 🧪 Functional UI Tests (Puppeteer)
+
+The `tests/functional` folder contains headless-browser tests written with **Puppeteer** + **Jest**. They exercise the main user flows (dashboard → chat → devices → documents) and capture screenshots.
+
+```bash
+# one-time install
+cd tests/functional
+npm install
+
+# run all Jest tests
+npm test
+
+# run the scripted user-flow (generates screenshots)
+node user_flow.js
+```
+
+Screenshots are saved to `screenshots/` at project root.
+
 ## 🔧 Configuration
 
 ### Network Configuration

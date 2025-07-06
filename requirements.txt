@@ -6,15 +6,15 @@ flask-cors==4.0.0
 flask-socketio==5.3.6
 
 # AI/ML Libraries
-langchain==0.1.0
-langchain-community==0.0.10
-langchain-ollama==0.1.0
+langchain>=0.1.0
+langchain-core>=0.1.8
+langchain-community>=0.0.10
+langchain-ollama>=0.1.0
 crewai==0.28.8
 chromadb==1.0.15
 sentence-transformers==5.0.0
-PyPDF2==3.0.1
 python-docx==1.2.0
-transformers==4.36.2
+transformers>=4.41.0
 
 # Network Automation
 netmiko==4.3.0
@@ -30,14 +30,14 @@ paramiko==3.4.0
 PyPDF2==3.0.1
 pandas==2.1.4
 openpyxl==3.1.2
-python-docx==1.1.0
+# python-docx is already specified above
 
 # Database & Storage
 sqlalchemy==2.0.23
 
 # Utilities
 python-dotenv==1.0.0
-pydantic==2.5.2
+pydantic==2.11.7
 requests==2.31.0
 pyyaml==6.0.1
 
