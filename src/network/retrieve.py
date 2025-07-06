@@ -47,8 +47,17 @@ def _run_commands(task: Task, commands: List[str]):
     """Run given commands and attach outputs."""
     outputs = {}
     for cmd in commands:
-        r = task.run(netmiko_send_command, command_string=cmd, use_textfsm=True, strip_command=False)
-        outputs[cmd] = r.result
+        r = task.run(netmiko_send_command, command_string=cmd, strip_command=False)
+        raw_output = r.result
+        # Attempt Genie parsing
+        try:
+            from genie.conf.base import Device as GenieDevice
+            dev = GenieDevice(name="dummy", os="ios")
+            dev.custom.setdefault('abstraction', {})['order'] = ['os']
+            parsed = dev.parse(cmd, output=raw_output)
+        except Exception:
+            parsed = None
+        outputs[cmd] = {"raw": raw_output, "parsed": parsed}
     return Result(host=task.host, result=outputs)
 
 
