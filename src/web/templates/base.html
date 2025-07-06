@@ -56,6 +56,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'config_push' %}active{% endif %}"
+                           href="{{ url_for('config_push') }}">
+                            <i class="fas fa-upload me-1"></i>Config&nbsp;Push
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'documents' %}active{% endif %}" 
                            href="{{ url_for('documents') }}">
                             <i class="fas fa-file-alt me-1"></i>Documents
